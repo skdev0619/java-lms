@@ -25,7 +25,6 @@ public class QuestionTest {
 
     }
 
-
     @DisplayName("질문의 삭제 상태 플래그를 true로 변경한다")
     @Test
     void markDeleted(){
@@ -42,5 +41,29 @@ public class QuestionTest {
         assertThat(deleteHistories).extracting("contentType", "deletedBy")
                 .containsExactly(new Tuple(ContentType.QUESTION, NsUserTest.JAVAJIGI));
 
+    }
+
+    @DisplayName("질문과 답변의 작성자가 동일하면 삭제 가능하다")
+    @Test
+    void deleteBySameUser() throws CannotDeleteException {
+        Q1.addAnswer(AnswerTest.A1);
+
+        List<DeleteHistory> history = Q1.delete(NsUserTest.JAVAJIGI);
+
+        assertThat(history).extracting("contentType", "deletedBy")
+                .containsExactlyInAnyOrder(
+                        new Tuple(ContentType.QUESTION, NsUserTest.JAVAJIGI),
+                        new Tuple(ContentType.ANSWER, NsUserTest.JAVAJIGI)
+                );
+    }
+
+    @DisplayName("질문과 답변의 작성자가 다르면 삭제 불가능하다")
+    @Test
+    void deleteByDiffrentUser() throws CannotDeleteException {
+        Q1.addAnswer(AnswerTest.A2);
+
+       assertThatThrownBy(() -> Q1.delete(NsUserTest.JAVAJIGI))
+               .isInstanceOf(RuntimeException.class)
+               .hasMessageContaining("다른 사람이 쓴 답변이 있어 삭제할 수 없습니다.");
     }
 }
