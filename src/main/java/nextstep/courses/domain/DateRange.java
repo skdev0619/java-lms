@@ -10,4 +10,16 @@ public class DateRange {
         this.startDate = startDate;
         this.endDate = endDate;
     }
+
+    public boolean isDateInRange(LocalDateTime date) {
+        return isStartDateGreaterThanOrEqual(date) && isEndDateLessThanOrEqual(date);
+    }
+
+    private boolean isStartDateGreaterThanOrEqual(LocalDateTime date) {
+        return startDate.isBefore(date) || startDate.isEqual(date);
+    }
+
+    private boolean isEndDateLessThanOrEqual(LocalDateTime date) {
+        return endDate.isAfter(date) || endDate.isEqual(date);
+    }
 }
