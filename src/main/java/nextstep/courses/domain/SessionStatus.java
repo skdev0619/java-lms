@@ -14,4 +14,8 @@ public enum SessionStatus {
     public boolean canEnroll(){
         return this == RECRUITING;
     }
+
+    public boolean canNotEnroll() {
+        return !canEnroll();
+    }
 }
