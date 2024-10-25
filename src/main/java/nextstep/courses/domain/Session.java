@@ -30,9 +30,10 @@ public class Session {
         this.enrollmentLimit = enrollmentLimit;
     }
 
-    public void checkEnrollmentPermission() {
+    public void checkEnrollmentPermission(int paymentAmount) {
         validateStatus();
         validateEnrollmentLimit();
+        validatePrice(paymentAmount);
     }
 
     private void validateStatus() {
@@ -44,6 +45,16 @@ public class Session {
     private void validateEnrollmentLimit() {
         if(enrollmentLimit <= 0){
             throw new IllegalStateException("수강 가능 인원이 0명 이하면 수강 신청 할 수 없습니다");
+        }
+    }
+
+    private void validatePrice(int paymentAmount) {
+        if(price < paymentAmount){
+            throw new IllegalStateException("강의 가격보다 지불한 돈이 더 많습니다.");
+        }
+
+        if(price > paymentAmount){
+            throw new IllegalStateException("수강 신청하기에 지불한 돈이 부족합니다.");
         }
     }
 }

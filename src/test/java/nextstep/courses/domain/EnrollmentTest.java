@@ -16,7 +16,7 @@ class EnrollmentTest {
         Enrollment enrollment = new Enrollment();
 
         assertThatIllegalStateException()
-                        .isThrownBy(() -> enrollment.register(session))
+                        .isThrownBy(() -> enrollment.register(session, 10000))
                         .withMessage("강의 상태가 모집 중이 아니면 수강 신청 할 수 없습니다.");
     }
 
@@ -28,8 +28,30 @@ class EnrollmentTest {
         Enrollment enrollment = new Enrollment();
 
         assertThatIllegalStateException()
-                .isThrownBy(() -> enrollment.register(session))
+                .isThrownBy(() -> enrollment.register(session, 10000))
                 .withMessage("수강 가능 인원이 0명 이하면 수강 신청 할 수 없습니다");
+    }
+
+    @DisplayName("지불한 돈이 강의 가격보다 많으면 수강 신청 할 수 없다")
+    @Test
+    void overPay(){
+        Session session = createSession(SessionStatus.RECRUITING, PricingType.PAID, 10000, 50);
+        Enrollment enrollment = new Enrollment();
+
+        assertThatIllegalStateException()
+                .isThrownBy(() -> enrollment.register(session, 10001))
+                .withMessage("강의 가격보다 지불한 돈이 더 많습니다.");
+    }
+
+    @DisplayName("강의 가격보다 지불한 돈이 적으면 수강 신청 할 수 없다")
+    @Test
+    void lessPay(){
+        Session session = createSession(SessionStatus.RECRUITING, PricingType.PAID, 10000, 50);
+        Enrollment enrollment = new Enrollment();
+
+        assertThatIllegalStateException()
+                .isThrownBy(() -> enrollment.register(session, 9999))
+                .withMessage("수강 신청하기에 지불한 돈이 부족합니다.");
 
     }
 

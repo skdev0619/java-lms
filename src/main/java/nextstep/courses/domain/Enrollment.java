@@ -4,7 +4,7 @@ public class Enrollment {
     public Enrollment() {
     }
 
-    public void register(Session session) {
-        session.checkEnrollmentPermission();
+    public void register(Session session, int payAmount) {
+        session.checkEnrollmentPermission(payAmount);
     }
 }
