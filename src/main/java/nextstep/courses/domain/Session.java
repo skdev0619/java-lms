@@ -8,9 +8,15 @@ public class Session {
 
     private final Image image;
 
-    public Session(Long id, DateRange dateRange, Image image) {
+    private final PricingType pricingType;
+
+    private int enrollmentLimit;
+
+    public Session(Long id, DateRange dateRange, Image image, PricingType pricingType) {
         this.id = id;
         this.dateRange = dateRange;
         this.image = image;
+        this.pricingType = pricingType;
     }
+
 }
