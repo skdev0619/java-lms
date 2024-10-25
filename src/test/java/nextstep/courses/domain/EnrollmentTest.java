@@ -20,6 +20,19 @@ class EnrollmentTest {
                         .withMessage("강의 상태가 모집 중이 아니면 수강 신청 할 수 없습니다.");
     }
 
+
+    @DisplayName("수강 가능 인원이 0명 이하면 수강 신청 할 수 없다")
+    @Test
+    void validateEnrollmentLimit(){
+        Session session = createSession(SessionStatus.RECRUITING, PricingType.PAID, 10000, 0);
+        Enrollment enrollment = new Enrollment();
+
+        assertThatIllegalStateException()
+                .isThrownBy(() -> enrollment.register(session))
+                .withMessage("수강 가능 인원이 0명 이하면 수강 신청 할 수 없습니다");
+
+    }
+
     private Session createSession(SessionStatus status, PricingType type, int price, int enrollmentLimit){
         DateRange dateRange = new DateRange(
                 LocalDateTime.of(2024, 10, 1, 0, 0),
