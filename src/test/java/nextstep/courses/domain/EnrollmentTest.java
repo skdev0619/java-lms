@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 class EnrollmentTest {
@@ -54,6 +55,18 @@ class EnrollmentTest {
                 .withMessage("수강 신청하기에 지불한 돈이 부족합니다.");
 
     }
+    
+    @DisplayName("유료강의 수강신청하면 수강 가능 인원에서 1 차감한다")
+    @Test
+    void decreaseAvailableSeats(){
+        Session session = createSession(SessionStatus.RECRUITING, PricingType.PAID, 10000, 50);
+        Enrollment enrollment = new Enrollment();
+
+        enrollment.register(session, 10000);
+
+        assertThat(session.getAvailableSeats()).isEqualTo(49);
+    }
+
 
     private Session createSession(SessionStatus status, PricingType type, int price, int enrollmentLimit){
         DateRange dateRange = new DateRange(

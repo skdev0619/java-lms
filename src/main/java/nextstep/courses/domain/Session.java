@@ -14,23 +14,28 @@ public class Session {
 
     private final int price;
 
-    private int enrollmentLimit;
+    private int availableSeats;
 
-    public Session(DateRange dateRange, SessionStatus status, Image image, PricingType pricingType, int price, int enrollmentLimit){
-        this(0L, dateRange, status, image, pricingType, price, enrollmentLimit);
+    public Session(DateRange dateRange, SessionStatus status, Image image, PricingType pricingType, int price, int availableSeats){
+        this(0L, dateRange, status, image, pricingType, price, availableSeats);
     }
 
-    public Session(Long id, DateRange dateRange, SessionStatus status, Image image, PricingType pricingType, int price, int enrollmentLimit) {
+    public Session(Long id, DateRange dateRange, SessionStatus status, Image image, PricingType pricingType, int price, int availableSeats) {
         this.id = id;
         this.dateRange = dateRange;
         this.status = status;
         this.image = image;
         this.pricingType = pricingType;
         this.price = price;
-        this.enrollmentLimit = enrollmentLimit;
+        this.availableSeats = availableSeats;
     }
 
-    public void checkEnrollmentPermission(int paymentAmount) {
+    public void decreaseAvailableSeats(int payAmount) {
+        checkEnrollmentPermission(payAmount);
+        decreaseSeat();
+    }
+
+    private void checkEnrollmentPermission(int paymentAmount) {
         validateStatus();
         validateEnrollmentLimit();
         validatePrice(paymentAmount);
@@ -43,7 +48,7 @@ public class Session {
     }
 
     private void validateEnrollmentLimit() {
-        if(enrollmentLimit <= 0){
+        if(availableSeats <= 0){
             throw new IllegalStateException("수강 가능 인원이 0명 이하면 수강 신청 할 수 없습니다");
         }
     }
@@ -56,5 +61,39 @@ public class Session {
         if(price > paymentAmount){
             throw new IllegalStateException("수강 신청하기에 지불한 돈이 부족합니다.");
         }
+    }
+
+    private void decreaseSeat() {
+        if(pricingType.isLimitEnrollment()){
+            this.availableSeats -= 1;
+        }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public DateRange getDateRange() {
+        return dateRange;
+    }
+
+    public SessionStatus getStatus() {
+        return status;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public PricingType getPricingType() {
+        return pricingType;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public int getAvailableSeats() {
+        return availableSeats;
     }
 }
