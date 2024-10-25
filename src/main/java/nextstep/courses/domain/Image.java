@@ -7,16 +7,18 @@ public class Image {
 
     private final byte[] data;
     private final ImageType fileType;
+    private final Size size;
 
-    public Image(byte[] data, String extension){
-        this(data, ImageType.from(extension));
+    public Image(byte[] data, Size size, String extension){
+        this(data, size, ImageType.from(extension));
     }
 
-    public Image(byte[] data, ImageType fileType) {
+    public Image(byte[] data, Size size, ImageType fileType) {
         if(data.length > LIMIT_FILE_SIZE){
             throw new IllegalArgumentException("이미지 크기가 1MB 이하여야 합니다");
         }
         this.data = data;
+        this.size = size;
         this.fileType = fileType;
     }
 }
