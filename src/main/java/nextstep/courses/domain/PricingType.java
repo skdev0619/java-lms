@@ -13,4 +13,12 @@ public enum PricingType {
     public boolean isLimitEnrollment() {
         return this == PAID;
     }
+
+    public boolean isFree() {
+        return this == FREE;
+    }
+
+    public boolean isPaid() {
+        return this == PAID;
+    }
 }

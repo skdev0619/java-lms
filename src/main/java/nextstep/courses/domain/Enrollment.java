@@ -5,6 +5,6 @@ public class Enrollment {
     }
 
     public void register(Session session, int payAmount) {
-        session.decreaseAvailableSeats(payAmount);
+        session.decreaseSeats(payAmount);
     }
 }

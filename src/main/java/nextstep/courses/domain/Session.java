@@ -30,9 +30,9 @@ public class Session {
         this.availableSeats = availableSeats;
     }
 
-    public void decreaseAvailableSeats(int payAmount) {
+    public void decreaseSeats(int payAmount) {
         checkEnrollmentPermission(payAmount);
-        decreaseSeat();
+        decreaseAvailableSeats();
     }
 
     private void checkEnrollmentPermission(int paymentAmount) {
@@ -48,12 +48,16 @@ public class Session {
     }
 
     private void validateEnrollmentLimit() {
-        if(availableSeats <= 0){
+        if(pricingType.isLimitEnrollment() && availableSeats <= 0){
             throw new IllegalStateException("수강 가능 인원이 0명 이하면 수강 신청 할 수 없습니다");
         }
     }
 
     private void validatePrice(int paymentAmount) {
+        if(pricingType.isFree()){
+            return;
+        }
+
         if(price < paymentAmount){
             throw new IllegalStateException("강의 가격보다 지불한 돈이 더 많습니다.");
         }
@@ -63,8 +67,8 @@ public class Session {
         }
     }
 
-    private void decreaseSeat() {
-        if(pricingType.isLimitEnrollment()){
+    private void decreaseAvailableSeats() {
+        if(pricingType.isPaid()){
             this.availableSeats -= 1;
         }
     }
