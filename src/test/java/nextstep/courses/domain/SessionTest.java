@@ -8,17 +8,16 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
-class EnrollmentTest {
+class SessionTest {
 
     @DisplayName("강의 상태가 모집 중이 아니면 수강 신청 할 수 없다")
     @Test
     void validateSessionStatus(){
         Session session = createSession(SessionStatus.FINISHED, PricingType.PAID, 10000, 50);
-        Enrollment enrollment = new Enrollment();
 
         assertThatIllegalStateException()
-                        .isThrownBy(() -> enrollment.register(session, 10000))
-                        .withMessage("강의 상태가 모집 중이 아니면 수강 신청 할 수 없습니다.");
+                .isThrownBy(() -> session.decreaseSeats(10000))
+                .withMessage("강의 상태가 모집 중이 아니면 수강 신청 할 수 없습니다.");
     }
 
 
@@ -26,10 +25,9 @@ class EnrollmentTest {
     @Test
     void validateEnrollmentLimit(){
         Session session = createSession(SessionStatus.RECRUITING, PricingType.PAID, 10000, 0);
-        Enrollment enrollment = new Enrollment();
 
         assertThatIllegalStateException()
-                .isThrownBy(() -> enrollment.register(session, 10000))
+                .isThrownBy(() -> session.decreaseSeats(10000))
                 .withMessage("수강 가능 인원이 0명 이하면 수강 신청 할 수 없습니다");
     }
 
@@ -37,10 +35,9 @@ class EnrollmentTest {
     @Test
     void overPay(){
         Session session = createSession(SessionStatus.RECRUITING, PricingType.PAID, 10000, 50);
-        Enrollment enrollment = new Enrollment();
 
         assertThatIllegalStateException()
-                .isThrownBy(() -> enrollment.register(session, 10001))
+                .isThrownBy(() -> session.decreaseSeats(10001))
                 .withMessage("강의 가격보다 지불한 돈이 더 많습니다.");
     }
 
@@ -48,21 +45,19 @@ class EnrollmentTest {
     @Test
     void lessPay(){
         Session session = createSession(SessionStatus.RECRUITING, PricingType.PAID, 10000, 50);
-        Enrollment enrollment = new Enrollment();
 
         assertThatIllegalStateException()
-                .isThrownBy(() -> enrollment.register(session, 9999))
+                .isThrownBy(() -> session.decreaseSeats(9999))
                 .withMessage("수강 신청하기에 지불한 돈이 부족합니다.");
 
     }
-    
+
     @DisplayName("유료강의는 수강신청하면 수강 가능 인원에서 1 차감한다")
     @Test
     void decreaseAvailableSeats(){
         Session session = createSession(SessionStatus.RECRUITING, PricingType.PAID, 10000, 50);
-        Enrollment enrollment = new Enrollment();
 
-        enrollment.register(session, 10000);
+        session.decreaseSeats(10000);
 
         assertThat(session.getAvailableSeats()).isEqualTo(49);
     }
@@ -76,4 +71,5 @@ class EnrollmentTest {
         Image image = new Image(new byte[]{}, new Size(300, 200), "jpg");
         return new Session(dateRange, status, image, type, price, enrollmentLimit);
     }
+
 }
