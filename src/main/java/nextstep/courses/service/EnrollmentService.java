@@ -3,9 +3,9 @@ package nextstep.courses.service;
 import nextstep.courses.domain.Course;
 import nextstep.courses.domain.CourseRepository;
 import nextstep.courses.domain.Session;
-import nextstep.users.domain.NsUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EnrollmentService {
@@ -17,9 +17,12 @@ public class EnrollmentService {
         this.courseRepository = courseRepository;
     }
 
-    public void enrollSession(NsUser loginUser, long courseId, Session session, int payAmount) {
-        Course course = courseRepository.findById(courseId);
-        session.enrollStudent(loginUser, payAmount);
+    @Transactional
+    public void enrollSession(EnrollRequest request) {
+        Session session = request.getSession();
+
+        Course course = courseRepository.findById(request.getCourseId());
+        session.enrollStudent(request.getLoginUser(), request.getPayAmount());
         course.addSession(session);
     }
 }

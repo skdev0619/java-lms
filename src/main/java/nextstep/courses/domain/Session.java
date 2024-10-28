@@ -66,4 +66,12 @@ public class Session {
     public Image getImage() {
         return image;
     }
+
+    public Pricing getPricing() {
+        return pricing;
+    }
+
+    public SessionStudent getStudent() {
+        return student;
+    }
 }
