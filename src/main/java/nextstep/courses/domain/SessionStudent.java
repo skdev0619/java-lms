@@ -19,6 +19,10 @@ public class SessionStudent {
         students.add(user);
     }
 
+    public int size(){
+        return students.size();
+    }
+
     private void checkAddStudent(Pricing pricing, NsUser user) {
         if (pricing.isFree()) {
             return;
