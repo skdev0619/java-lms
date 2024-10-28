@@ -10,12 +10,7 @@ public enum ImageType {
     SVG;
 
     public static ImageType from(String extension) {
-        validate(extension);
-        return ImageType.valueOf(extension.toUpperCase());
-    }
-
-    private static void validate(String extension) {
-        Arrays.stream(values())
+        return Arrays.stream(values())
                 .filter(type -> extension.equalsIgnoreCase(type.name()))
                 .findFirst()
                 .orElseThrow(() ->
