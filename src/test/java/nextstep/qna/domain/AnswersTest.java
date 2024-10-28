@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class AnswersTest {
     private static final Answer A1 = new Answer(NsUserTest.JAVAJIGI, QuestionTest.Q1, "Answers Contents1");
@@ -26,5 +27,15 @@ class AnswersTest {
                         new Tuple(ContentType.ANSWER, NsUserTest.JAVAJIGI),
                         new Tuple(ContentType.ANSWER, NsUserTest.JAVAJIGI)
                 );
+    }
+    
+    @DisplayName("작성자와 다른 유저가 쓴 댓글이 있는 경우 삭제할 수 없다")
+    @Test
+    void deleteByNotWriter() throws CannotDeleteException {
+        Answers answers = new Answers(List.of(AnswerTest.A1, AnswerTest.A2));
+
+        assertThatThrownBy(() -> answers.delete(NsUserTest.JAVAJIGI))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("다른 사람이 쓴 답변이 있어 삭제할 수 없습니다.");
     }
 }
