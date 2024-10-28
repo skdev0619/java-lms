@@ -24,6 +24,10 @@ public class Pricing {
         return price == payAmount;
     }
 
+    public boolean isFree() {
+        return pricingType.isFree();
+    }
+
     public boolean canNotEnroll(int payAmount) {
         return !canEnroll(payAmount);
     }

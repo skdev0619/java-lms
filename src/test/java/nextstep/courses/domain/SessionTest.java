@@ -19,18 +19,6 @@ class SessionTest {
                 .isThrownBy(() -> session.enrollStudent(NsUserTest.JAVAJIGI, 10000))
                 .withMessage("강의 상태가 모집 중이 아니면 수강 신청 할 수 없습니다.");
     }
-
-
-    @DisplayName("유료강의는 정원 초과되면 수강할 수 없다")
-    @Test
-    void validateEnrollmentLimit() {
-        Session session = createSession(SessionStatus.RECRUITING, PricingType.PAID, 10000, 1);
-        session.enrollStudent(NsUserTest.JAVAJIGI, 10000);
-
-        assertThatIllegalStateException()
-                .isThrownBy(() -> session.enrollStudent(NsUserTest.SANJIGI, 10000))
-                .withMessage("이 강의는 정원이 초과되었습니다.");
-    }
     
     @DisplayName("유료강의는 강의 가격과 지불한 돈이 일치하지 않으면 수강할 수 없다")
     @Test

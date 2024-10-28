@@ -2,9 +2,6 @@ package nextstep.courses.domain;
 
 import nextstep.users.domain.NsUser;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Session {
 
     private final Long id;
@@ -17,9 +14,7 @@ public class Session {
 
     private final Pricing pricing;
 
-    private int availableSeats;
-
-    private List<NsUser> students = new ArrayList<NsUser>();
+    private final SessionStudent student;
 
     public Session(SessionPeriod dateRange, SessionStatus status, Image image, Pricing pricing, int availableSeats) {
         this(0L, dateRange, status, image, pricing, availableSeats);
@@ -31,17 +26,16 @@ public class Session {
         this.status = status;
         this.image = image;
         this.pricing = pricing;
-        this.availableSeats = availableSeats;
+        this.student = new SessionStudent(availableSeats);
     }
 
     public void enrollStudent(NsUser loginUser, int payAmount) {
         checkEnrollmentPermission(payAmount);
-        addStudent(loginUser);
+        student.addStudent(pricing, loginUser);
     }
 
     private void checkEnrollmentPermission(int paymentAmount) {
         validateStatus();
-        validateAvailableSeats();
         validatePrice(paymentAmount);
     }
 
@@ -51,24 +45,10 @@ public class Session {
         }
     }
 
-    private void validateAvailableSeats() {
-        /*if (pricingType.isFree()) {
-            return;
-        }*/
-
-        if (students.size() == availableSeats) {
-            throw new IllegalStateException("이 강의는 정원이 초과되었습니다.");
-        }
-    }
-
     private void validatePrice(int paymentAmount) {
         if (pricing.canNotEnroll(paymentAmount)) {
             throw new IllegalStateException("강의 가격과 지불한 돈이 일치하지 않습니다.");
         }
-    }
-
-    private void addStudent(NsUser user) {
-        students.add(user);
     }
 
     public Long getId() {
@@ -86,9 +66,4 @@ public class Session {
     public Image getImage() {
         return image;
     }
-
-    public int getAvailableSeats() {
-        return availableSeats;
-    }
-
 }
