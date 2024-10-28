@@ -3,23 +3,23 @@ package nextstep.courses.service;
 import nextstep.courses.domain.Course;
 import nextstep.courses.domain.CourseRepository;
 import nextstep.courses.domain.Session;
+import nextstep.users.domain.NsUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EnrollmentService {
 
-    @Autowired
     private final CourseRepository courseRepository;
 
+    @Autowired
     public EnrollmentService(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
 
-    public void enrollSession(long courseId, Session session, int payAmount){
+    public void enrollSession(NsUser loginUser, long courseId, Session session, int payAmount) {
         Course course = courseRepository.findById(courseId);
-        session.decreaseSeats(payAmount);
-
+        session.enrollStudent(loginUser, payAmount);
         course.addSession(session);
     }
 }

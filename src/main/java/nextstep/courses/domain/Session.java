@@ -15,25 +15,22 @@ public class Session {
 
     private final Image image;
 
-    private final PricingType pricingType;
-
-    private final int price;
+    private final Pricing pricing;
 
     private int availableSeats;
 
     private List<NsUser> students = new ArrayList<NsUser>();
 
-    public Session(SessionPeriod dateRange, SessionStatus status, Image image, PricingType pricingType, int price, int availableSeats) {
-        this(0L, dateRange, status, image, pricingType, price, availableSeats);
+    public Session(SessionPeriod dateRange, SessionStatus status, Image image, Pricing pricing, int availableSeats) {
+        this(0L, dateRange, status, image, pricing, availableSeats);
     }
 
-    public Session(Long id, SessionPeriod dateRange, SessionStatus status, Image image, PricingType pricingType, int price, int availableSeats) {
+    public Session(Long id, SessionPeriod dateRange, SessionStatus status, Image image, Pricing pricing, int availableSeats) {
         this.id = id;
         this.dateRange = dateRange;
         this.status = status;
         this.image = image;
-        this.pricingType = pricingType;
-        this.price = price;
+        this.pricing = pricing;
         this.availableSeats = availableSeats;
     }
 
@@ -55,9 +52,9 @@ public class Session {
     }
 
     private void validateAvailableSeats() {
-        if (pricingType.isFree()) {
+        /*if (pricingType.isFree()) {
             return;
-        }
+        }*/
 
         if (students.size() == availableSeats) {
             throw new IllegalStateException("이 강의는 정원이 초과되었습니다.");
@@ -65,16 +62,8 @@ public class Session {
     }
 
     private void validatePrice(int paymentAmount) {
-        if (pricingType.isFree()) {
-            return;
-        }
-
-        if (price < paymentAmount) {
-            throw new IllegalStateException("강의 가격보다 지불한 돈이 더 많습니다.");
-        }
-
-        if (price > paymentAmount) {
-            throw new IllegalStateException("수강 신청하기에 지불한 돈이 부족합니다.");
+        if (pricing.canNotEnroll(paymentAmount)) {
+            throw new IllegalStateException("강의 가격과 지불한 돈이 일치하지 않습니다.");
         }
     }
 
@@ -96,14 +85,6 @@ public class Session {
 
     public Image getImage() {
         return image;
-    }
-
-    public PricingType getPricingType() {
-        return pricingType;
-    }
-
-    public int getPrice() {
-        return price;
     }
 
     public int getAvailableSeats() {

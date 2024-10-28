@@ -27,6 +27,7 @@ class CourseTest {
                 LocalDateTime.of(2024, 10, 5, 23, 59)
         );
         Image image = new Image(new byte[]{}, new Size(300, 200), "jpg");
-        return new Session(dateRange, SessionStatus.RECRUITING, image, PricingType.PAID, 10000, 50);
+        Pricing pricing = new Pricing(PricingType.PAID, 10000);
+        return new Session(dateRange, SessionStatus.RECRUITING, image, pricing, 50);
     }
 }
