@@ -9,7 +9,7 @@ class ImageTest {
 
     @DisplayName("이미지 파일 크기가 1MB 이하여야 한다")
     @Test
-    void limitFileSize(){
+    void limitFileSize() {
         byte[] overSizeData = new byte[1_048_577];
         Size size = new Size(300, 200);
 

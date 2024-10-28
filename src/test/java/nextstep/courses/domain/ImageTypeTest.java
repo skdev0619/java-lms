@@ -9,7 +9,7 @@ class ImageTypeTest {
 
     @DisplayName("확장자로부터 이미지 타입을 반환받는다")
     @Test
-    void from(){
+    void from() {
         ImageType jpg = ImageType.from("jpg");
 
         assertThat(ImageType.from("jpg")).isEqualTo(ImageType.JPG);
