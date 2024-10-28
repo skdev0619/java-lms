@@ -10,10 +10,6 @@ public enum PricingType {
         this.description = description;
     }
 
-    public boolean isLimitEnrollment() {
-        return this == PAID;
-    }
-
     public boolean isFree() {
         return this == FREE;
     }

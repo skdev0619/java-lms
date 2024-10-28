@@ -7,11 +7,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class PricingTypeTest {
 
-    @DisplayName("유료 강의는 는 수강 인원 제한이 있다")
+    @DisplayName("무료강의인지 확인한다")
     @Test
-    void isLimitEnrollment(){
+    void isFree() {
+        PricingType pricingType = PricingType.FREE;
+
+        assertThat(pricingType.isFree()).isTrue();
+    }
+
+    @DisplayName("유료강의인지 확인한다")
+    @Test
+    void isLimitEnrollment() {
         PricingType pricingType = PricingType.PAID;
 
-        assertThat(pricingType.isLimitEnrollment()).isTrue();
+        assertThat(pricingType.isPaid()).isTrue();
     }
 }
