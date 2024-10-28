@@ -1,10 +1,15 @@
 package nextstep.courses.domain;
 
+import nextstep.users.domain.NsUser;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Session {
 
     private final Long id;
 
-    private final DateRange dateRange;
+    private final SessionPeriod dateRange;
 
     private final SessionStatus status;
 
@@ -16,11 +21,13 @@ public class Session {
 
     private int availableSeats;
 
-    public Session(DateRange dateRange, SessionStatus status, Image image, PricingType pricingType, int price, int availableSeats){
+    private List<NsUser> students = new ArrayList<NsUser>();
+
+    public Session(SessionPeriod dateRange, SessionStatus status, Image image, PricingType pricingType, int price, int availableSeats) {
         this(0L, dateRange, status, image, pricingType, price, availableSeats);
     }
 
-    public Session(Long id, DateRange dateRange, SessionStatus status, Image image, PricingType pricingType, int price, int availableSeats) {
+    public Session(Long id, SessionPeriod dateRange, SessionStatus status, Image image, PricingType pricingType, int price, int availableSeats) {
         this.id = id;
         this.dateRange = dateRange;
         this.status = status;
@@ -30,54 +37,56 @@ public class Session {
         this.availableSeats = availableSeats;
     }
 
-    public void decreaseSeats(int payAmount) {
+    public void enrollStudent(NsUser loginUser, int payAmount) {
         checkEnrollmentPermission(payAmount);
-        decreaseAvailableSeats();
+        addStudent(loginUser);
     }
 
     private void checkEnrollmentPermission(int paymentAmount) {
         validateStatus();
-        validateEnrollmentLimit();
+        validateAvailableSeats();
         validatePrice(paymentAmount);
     }
 
     private void validateStatus() {
-        if(status.canNotEnroll()){
+        if (status.canNotEnroll()) {
             throw new IllegalStateException("강의 상태가 모집 중이 아니면 수강 신청 할 수 없습니다.");
         }
     }
 
-    private void validateEnrollmentLimit() {
-        if(pricingType.isLimitEnrollment() && availableSeats <= 0){
-            throw new IllegalStateException("수강 가능 인원이 0명 이하면 수강 신청 할 수 없습니다");
+    private void validateAvailableSeats() {
+        if (pricingType.isFree()) {
+            return;
+        }
+
+        if (students.size() == availableSeats) {
+            throw new IllegalStateException("이 강의는 정원이 초과되었습니다.");
         }
     }
 
     private void validatePrice(int paymentAmount) {
-        if(pricingType.isFree()){
+        if (pricingType.isFree()) {
             return;
         }
 
-        if(price < paymentAmount){
+        if (price < paymentAmount) {
             throw new IllegalStateException("강의 가격보다 지불한 돈이 더 많습니다.");
         }
 
-        if(price > paymentAmount){
+        if (price > paymentAmount) {
             throw new IllegalStateException("수강 신청하기에 지불한 돈이 부족합니다.");
         }
     }
 
-    private void decreaseAvailableSeats() {
-        if(pricingType.isPaid()){
-            this.availableSeats -= 1;
-        }
+    private void addStudent(NsUser user) {
+        students.add(user);
     }
 
     public Long getId() {
         return id;
     }
 
-    public DateRange getDateRange() {
+    public SessionPeriod getDateRange() {
         return dateRange;
     }
 
@@ -100,4 +109,5 @@ public class Session {
     public int getAvailableSeats() {
         return availableSeats;
     }
+
 }
