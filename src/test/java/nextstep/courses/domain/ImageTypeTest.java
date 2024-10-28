@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 class ImageTypeTest {
 
@@ -13,6 +14,14 @@ class ImageTypeTest {
         ImageType jpg = ImageType.from("jpg");
 
         assertThat(ImageType.from("jpg")).isEqualTo(ImageType.JPG);
+    }
+
+    @DisplayName("유효하지 않은 확장자를 체크한다")
+    @Test
+    void invalidExtension(){
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> ImageType.from("txt"))
+                .withMessage("허용하지 않는 이미지 확장자입니다.");
     }
 
 }
