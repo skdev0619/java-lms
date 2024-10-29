@@ -11,7 +11,7 @@ class SessionStudentTest {
 
     @DisplayName("유료강의는 최대수강인원을 초과할 수 없다")
     @Test
-    void validate(){
+    void validate() {
         SessionStudent student = new SessionStudent(1);
         Pricing pricing = new Pricing(PricingType.PAID, 10000);
 
@@ -21,9 +21,22 @@ class SessionStudentTest {
                 .withMessage("이 강의는 정원이 초과되었습니다.");
     }
 
+    @DisplayName("동일한 유저는 중복으로 수강신청할 수 없다.")
+    @Test
+    void checkExistingStudent() {
+        SessionStudent student = new SessionStudent(2);
+        Pricing pricing = new Pricing(PricingType.PAID, 10000);
+
+        student.addStudent(pricing, NsUserTest.JAVAJIGI);
+
+        assertThatIllegalStateException()
+                .isThrownBy(() -> student.addStudent(pricing, NsUserTest.JAVAJIGI))
+                .withMessage("이미 수강신청한 유저입니다.");
+    }
+
     @DisplayName("수강신청 성공하면 유저를 등록한다")
     @Test
-    void addStudent(){
+    void addStudent() {
         SessionStudent student = new SessionStudent(2);
         Pricing pricing = new Pricing(PricingType.PAID, 10000);
 
@@ -32,4 +45,5 @@ class SessionStudentTest {
 
         assertThat(student.size()).isEqualTo(2);
     }
+
 }

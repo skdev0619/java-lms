@@ -23,16 +23,21 @@ class EnrollmentServiceTest {
     @Autowired
     private EnrollmentService service;
 
+    private Session session;
+
     @BeforeEach
     void setUp() {
         courseRepository.save(new Course("과정", 1L));
+        Course course = courseRepository.findById(1L);
+
+        session = createSession();
+        course.addSession(session);
     }
 
     @DisplayName("수강 신청 성공하면 수강 인원 목록에 유저가 포함된다")
     @Test
     void enrollSession() {
-        Session session = createSession();
-        EnrollRequest request = new EnrollRequest(1L, NsUserTest.SANJIGI, session, 10000);
+        EnrollRequest request = new EnrollRequest(NsUserTest.SANJIGI, session, 10000);
 
         service.enrollSession(request);
 
