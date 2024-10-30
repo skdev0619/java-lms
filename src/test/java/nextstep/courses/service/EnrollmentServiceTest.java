@@ -49,9 +49,9 @@ class EnrollmentServiceTest {
                 LocalDateTime.of(2024, 10, 1, 0, 0),
                 LocalDateTime.of(2024, 10, 5, 23, 59)
         );
-        Image image = new Image(new byte[]{}, new Size(300, 200), "jpg");
+        SessionImage image = new SessionImage("/image.png", 100, new Size(300, 200));
         Pricing pricing = new Pricing(PricingType.PAID, 10000);
-        return new Session(dateRange, SessionStatus.RECRUITING, image, pricing, 50);
+        return new Session(dateRange, SessionStatus.RECRUITING, image, pricing, 50, 1L, LocalDateTime.now());
     }
 
 }
