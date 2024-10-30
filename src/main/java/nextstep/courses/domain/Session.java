@@ -24,17 +24,21 @@ public class Session {
 
     private LocalDateTime updated_at;
 
-    public Session(SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, int availableSeats, Long creator_id, LocalDateTime created_at) {
-        this(0L, dateRange, status, image, pricing, availableSeats, creator_id, created_at);
+    public Session(SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, SessionStudent student, Long creator_id, LocalDateTime created_at) {
+        this(0L, dateRange, status, image, pricing, student, creator_id, created_at);
     }
 
-    public Session(Long id, SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, int availableSeats, Long creator_id, LocalDateTime created_at) {
+    public Session(SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, int availableSeats, Long creator_id, LocalDateTime created_at) {
+        this(0L, dateRange, status, image, pricing, new SessionStudent(availableSeats), creator_id, created_at);
+    }
+
+    public Session(Long id, SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, SessionStudent student, Long creator_id, LocalDateTime created_at) {
         this.id = id;
         this.dateRange = dateRange;
         this.status = status;
         this.image = image;
         this.pricing = pricing;
-        this.student = new SessionStudent(availableSeats);
+        this.student = student;
         this.creator_id = creator_id;
         this.created_at = created_at;
     }

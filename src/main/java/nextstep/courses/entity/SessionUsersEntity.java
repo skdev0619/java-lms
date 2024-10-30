@@ -1,12 +1,12 @@
 package nextstep.courses.entity;
 
-import nextstep.courses.domain.Session;
 import nextstep.courses.domain.SessionStudent;
-import nextstep.users.domain.NsUser;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toSet;
 
 public class SessionUsersEntity {
     private Long id;
@@ -27,6 +27,14 @@ public class SessionUsersEntity {
         this.creator_id = creator_id;
         this.created_at = created_at;
         this.updated_at = updated_at;
+    }
+
+    public static SessionStudent of(int availableSeat, List<SessionUsersEntity> sessionUsers) {
+        Set<Long> studentIds = sessionUsers.stream()
+                .map(SessionUsersEntity::getNs_user_id)
+                .collect(toSet());
+
+        return new SessionStudent(availableSeat, studentIds);
     }
 
     public Long getId() {

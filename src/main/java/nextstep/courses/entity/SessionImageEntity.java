@@ -1,5 +1,8 @@
 package nextstep.courses.entity;
 
+import nextstep.courses.domain.SessionImage;
+import nextstep.courses.domain.Size;
+
 import java.time.LocalDateTime;
 
 public class SessionImageEntity {
@@ -27,6 +30,14 @@ public class SessionImageEntity {
         this.creator_id = creator_id;
         this.created_at = created_at;
         this.updated_at = updated_at;
+    }
+
+    public SessionImage fromEntity() {
+        return new SessionImage(
+                file_path,
+                file_size,
+                new Size(width, height)
+        );
     }
 
     public Long getId() {

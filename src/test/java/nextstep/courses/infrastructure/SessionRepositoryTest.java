@@ -32,12 +32,12 @@ class SessionRepositoryTest {
         LocalDateTime start_date = LocalDateTime.of(2024, 10, 1, 0, 0);
         LocalDateTime end_date =LocalDateTime.of(2024, 10, 5, 0, 0);
 
-        SessionEntity session = new SessionEntity(10000L, start_date, end_date, "P", "P", 50, 1L, LocalDateTime.now(), LocalDateTime.now());
+        SessionEntity session = new SessionEntity(10000L, start_date, end_date, "PAID",10000,  "PREPARING", 50, 1L, LocalDateTime.now(), LocalDateTime.now());
 
         sessionRepository.save(session);
 
         SessionEntity sessionById = sessionRepository.findById(1L);
         assertThat(sessionById).extracting("course_id", "start_date", "end_date", "pricing_type", "session_status", "available_seat")
-                .containsExactlyInAnyOrder(10000L, start_date, end_date, "P", "P", 50);
+                .containsExactlyInAnyOrder(10000L, start_date, end_date, "PAID", "PREPARING", 50);
     }
 }
