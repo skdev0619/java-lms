@@ -19,8 +19,8 @@ public class JdbcSessionRepository implements SessionRepository {
 
     @Override
     public int save(SessionEntity session) {
-        String sql = "insert into session(course_id, start_date, end_date, pricing_type, session_status, available_seat, creator_id, created_at, updated_at) " +
-                     "values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into session(course_id, start_date, end_date, pricing_type, price, session_status, available_seat, creator_id, created_at, updated_at) " +
+                     "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         return jdbcTemplate.update(
                 sql,
@@ -28,6 +28,7 @@ public class JdbcSessionRepository implements SessionRepository {
                 session.getStart_date(),
                 session.getEnd_date(),
                 session.getPricing_type(),
+                session.getPrice(),
                 session.getSession_status(),
                 session.getAvailable_seat(),
                 session.getCreator_id(),
@@ -37,7 +38,7 @@ public class JdbcSessionRepository implements SessionRepository {
 
     @Override
     public SessionEntity findById(Long id) {
-        String sql = "select id, course_id, start_date, end_date, pricing_type, session_status, available_seat, creator_id, created_at, updated_at from session where id = ?";
+        String sql = "select id, course_id, start_date, end_date, pricing_type, price, session_status, available_seat, creator_id, created_at, updated_at from session where id = ?";
 
         RowMapper<SessionEntity> rowMapper = (rs, rowNum) -> new SessionEntity(
                 rs.getLong(1),
@@ -45,11 +46,12 @@ public class JdbcSessionRepository implements SessionRepository {
                 toLocalDateTime(rs.getTimestamp(3)),
                 toLocalDateTime(rs.getTimestamp(4)),
                 rs.getString(5),
-                rs.getString(6),
-                rs.getInt(7),
-                rs.getLong(8),
-                toLocalDateTime(rs.getTimestamp(9)),
-                toLocalDateTime(rs.getTimestamp(10)));
+                rs.getInt(6),
+                rs.getString(7),
+                rs.getInt(8),
+                rs.getLong(9),
+                toLocalDateTime(rs.getTimestamp(10)),
+                toLocalDateTime(rs.getTimestamp(11)));
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
