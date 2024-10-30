@@ -26,6 +26,7 @@ class SessionUsersRepositoryTest {
     @BeforeEach
     void setUp() {
         sessionUsersRepository = new JdbcSessionUsersRepository(jdbcTemplate);
+        sessionUsersRepository.deleteBySessionId(10000L);
     }
 
     @DisplayName("강의에 등록된 유저를 저장하고 id(pk)로 조회한다")
@@ -35,9 +36,9 @@ class SessionUsersRepositoryTest {
 
         sessionUsersRepository.save(sessionUsers);
 
-        SessionUsersEntity sessionUserbyId = sessionUsersRepository.findById(1L);
-        assertThat(sessionUserbyId).extracting("session_id", "ns_user_id")
-                .containsExactlyInAnyOrder(10000L, 1L);
+        List<SessionUsersEntity> users = sessionUsersRepository.findBySessionId(10000L);
+        assertThat(users).extracting("session_id", "ns_user_id")
+                .containsExactlyInAnyOrder(new Tuple(10000L, 1L));
     }
     
     @DisplayName("특정 강의를 듣고 있는 수강생들을 조회한다")
@@ -52,5 +53,30 @@ class SessionUsersRepositoryTest {
 
         assertThat(sessionUsers).extracting("session_id", "ns_user_id")
                 .contains(new Tuple(10000L, 1L), new Tuple(10000L, 2L));
+    }
+
+    @DisplayName("특정 강의를 듣고 있는 수강생 리스트를 삭제한다")
+    @Test
+    void deleteBySessionId(){
+        sessionUsersRepository.deleteBySessionId(10000L);
+
+        List<SessionUsersEntity> sessionUsers = sessionUsersRepository.findBySessionId(10000L);
+
+        assertThat(sessionUsers).hasSize(0);
+    }
+
+    @DisplayName("특정 강의를 듣고 있는 수강생 목록을 일괄 추가한다")
+    @Test
+    void bulkInsert(){
+        sessionUsersRepository.deleteBySessionId(10000L);
+
+        List<SessionUsersEntity> usersEntities = List.of(
+                new SessionUsersEntity(10000L, 1L, 1L, LocalDateTime.now(), LocalDateTime.now()),
+                new SessionUsersEntity(10000L, 2L, 2L, LocalDateTime.now(), LocalDateTime.now())
+        );
+        sessionUsersRepository.bulkSave(usersEntities);
+
+        List<SessionUsersEntity> users = sessionUsersRepository.findBySessionId(10000L);
+        assertThat(users).hasSize(2);
     }
 }

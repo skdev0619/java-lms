@@ -8,4 +8,6 @@ public interface SessionUsersRepository {
     int save(SessionUsersEntity users);
     SessionUsersEntity findById(Long id);
     List<SessionUsersEntity> findBySessionId(Long sessionId);
+    void deleteBySessionId(Long sessionId);
+    int[] bulkSave(List<SessionUsersEntity> users);
 }

@@ -42,7 +42,7 @@ class EnrollmentServiceTest {
 
         SessionImage image = imageById.fromEntity();
         SessionStudent student = SessionUsersEntity.of(sessionById.getAvailable_seat(), sessionUsers);
-        session = sessionById.of(image, student);
+        session = sessionById.of(10000L, image, student);
     }
 
     @DisplayName("수강 신청 성공하면 수강 인원 목록에 유저가 포함된다")
@@ -52,6 +52,7 @@ class EnrollmentServiceTest {
 
         service.enrollSession(request);
 
-        assertThat(session.getStudent().size()).isEqualTo(2);
+        List<SessionUsersEntity> users = sessionUsersRepository.findBySessionId(10000L);
+        assertThat(users).hasSize(1);
     }
 }

@@ -36,12 +36,12 @@ public class SessionEntity {
         this.updated_at = updated_at;
     }
 
-    public Session of(SessionImage image, SessionStudent student) {
+    public Session of(Long sessionId, SessionImage image, SessionStudent student) {
         SessionPeriod period = new SessionPeriod(this.start_date, this.end_date);
         SessionStatus status = SessionStatus.valueOf(session_status);
         Pricing pricing = new Pricing(PricingType.valueOf(pricing_type), price);
 
-        return new Session(period, status, image, pricing, student, creator_id, created_at);
+        return new Session(sessionId, period, status, image, pricing, student, creator_id, created_at);
     }
 
     public Long getId() {

@@ -1,10 +1,12 @@
 package nextstep.courses.entity;
 
 import nextstep.courses.domain.SessionStudent;
+import nextstep.users.domain.NsUser;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -33,8 +35,13 @@ public class SessionUsersEntity {
         Set<Long> studentIds = sessionUsers.stream()
                 .map(SessionUsersEntity::getNs_user_id)
                 .collect(toSet());
-
         return new SessionStudent(availableSeat, studentIds);
+    }
+
+    public static List<SessionUsersEntity> toList(Long sessonId, SessionStudent student, NsUser loginUser){
+        return student.getStudentIds().stream()
+                .map(user -> new SessionUsersEntity(sessonId, user, loginUser.getId(), LocalDateTime.now(), LocalDateTime.now()))
+                .collect(Collectors.toList());
     }
 
     public Long getId() {

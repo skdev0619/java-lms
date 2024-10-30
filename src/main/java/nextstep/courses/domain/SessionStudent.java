@@ -49,4 +49,8 @@ public class SessionStudent {
             throw new IllegalStateException("이미 수강신청한 유저입니다.");
         }
     }
+
+    public Set<Long> getStudentIds() {
+        return studentIds;
+    }
 }
