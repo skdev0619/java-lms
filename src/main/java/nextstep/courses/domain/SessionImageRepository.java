@@ -1,9 +1,7 @@
 package nextstep.courses.domain;
 
-import nextstep.courses.entity.SessionImageEntity;
-
 public interface SessionImageRepository {
-    int save(SessionImageEntity image);
+    int save(SessionImage image);
 
-    SessionImageEntity findById(Long id);
+    SessionImage findById(Long id);
 }

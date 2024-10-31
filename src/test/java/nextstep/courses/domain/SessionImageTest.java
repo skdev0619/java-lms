@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 class SessionImageTest {
@@ -19,7 +21,7 @@ class SessionImageTest {
     @Test
     void limitFileSize() {
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> new SessionImage("/test.jpg", 1_048_577, size))
+                .isThrownBy(() -> new SessionImage(10000L,"/test.jpg", 1_048_577, size, 1L, LocalDateTime.now(), LocalDateTime.now()))
                 .withMessage("이미지 크기가 1MB 이하여야 합니다");
     }
 
@@ -28,7 +30,7 @@ class SessionImageTest {
     void validateFilePath(){
         String filePath = "확장자없는파일경로";
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> new SessionImage(filePath, 1_000, size))
+                .isThrownBy(() -> new SessionImage(10000L, filePath, 1_048_576, size, 1L, LocalDateTime.now(), LocalDateTime.now()))
                 .withMessage("유효하지 않은 파일 경로입니다");
     }
 

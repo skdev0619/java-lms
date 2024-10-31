@@ -1,7 +1,8 @@
 package nextstep.courses.infrastructure;
 
+import nextstep.courses.domain.SessionImage;
 import nextstep.courses.domain.SessionImageRepository;
-import nextstep.courses.entity.SessionImageEntity;
+import nextstep.courses.domain.Size;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,35 +20,36 @@ public class JdbcSessionImageRepository implements SessionImageRepository {
     }
 
     @Override
-    public int save(SessionImageEntity image) {
+    public int save(SessionImage image) {
         String sql = "insert into session_image (session_id, file_path, file_size, width, height, creator_id, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?)";
 
         return jdbcTemplate.update(
                 sql,
-                image.getSession_id(),
-                image.getFile_path(),
-                image.getFile_size(),
-                image.getWidth(),
-                image.getHeight(),
-                image.getCreator_id(),
+                image.getSessionId(),
+                image.getFilePath(),
+                image.getFileSize(),
+                image.getSize().getWidth(),
+                image.getSize().getHeight(),
+                image.getCreatorId(),
                 LocalDateTime.now(),
-                LocalDateTime.now());
+                LocalDateTime.now()
+        );
     }
 
     @Override
-    public SessionImageEntity findById(Long id) {
+    public SessionImage findById(Long id) {
         String sql = "select id, session_id, file_path, file_size, width, height, creator_id, created_at, updated_at from session_image where id = ?";
 
-        RowMapper<SessionImageEntity> rowMapper = (rs, rowNum) -> new SessionImageEntity(
+        RowMapper<SessionImage> rowMapper = (rs, rowNum) -> new SessionImage(
                 rs.getLong("id"),
                 rs.getLong("session_id"),
                 rs.getString("file_path"),
                 rs.getInt("file_size"),
-                rs.getInt("width"),
-                rs.getInt("height"),
+                new Size(rs.getInt("width"), rs.getInt("height")),
                 rs.getLong("creator_id"),
                 toLocalDateTime(rs.getTimestamp("created_at")),
-                toLocalDateTime(rs.getTimestamp("updated_at")));
+                toLocalDateTime(rs.getTimestamp("updated_at"))
+        );
 
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
