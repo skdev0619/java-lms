@@ -39,4 +39,12 @@ public class Size {
                     String.format("가로와 세로의 비율은 %d:%d여야 합니다", WIDTH_RATIO, HEIGHT_RATIO));
         }
     }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 }

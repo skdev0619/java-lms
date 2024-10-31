@@ -1,13 +1,11 @@
 package nextstep.courses.domain;
 
-import nextstep.courses.entity.SessionUsersEntity;
-
 import java.util.List;
 
 public interface SessionUsersRepository {
-    int save(SessionUsersEntity users);
-    SessionUsersEntity findById(Long id);
-    List<SessionUsersEntity> findBySessionId(Long sessionId);
+    int save(SessionStudent users);
+    SessionStudent findById(Long id);
+    SessionStudents findBySessionId(Long sessionId);
     void deleteBySessionId(Long sessionId);
-    int[] bulkSave(List<SessionUsersEntity> users);
+    int[] bulkSave(List<SessionStudent> students);
 }

@@ -2,20 +2,25 @@ package nextstep.courses.domain;
 
 import nextstep.users.domain.NsUser;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class SessionStudents {
+    private Long sessionId;
+    private final List<Long> studentIds;
 
-    private final int availableSeats;
-    private final Set<Long> studentIds;
-
-    public SessionStudents(int availableSeats){
-        this(availableSeats, new HashSet<>());
+    public SessionStudents(Long sessionId){
+        this(sessionId, new ArrayList<>());
     }
 
-    public SessionStudents(int availableSeats, Set<Long> studentIds) {
-        this.availableSeats = availableSeats;
+    public SessionStudents(Long sessionId, List<Long> studentIds) {
+        this.sessionId = sessionId;
         this.studentIds = studentIds;
     }
 
@@ -29,17 +34,7 @@ public class SessionStudents {
     }
 
     private void checkAddStudent(Pricing pricing, NsUser user) {
-        if (pricing.isFree()) {
-            return;
-        }
-        checkFullSession();
         checkExistingStudent(user);
-    }
-
-    private void checkFullSession() {
-        if (studentIds.size() == availableSeats) {
-            throw new IllegalStateException("이 강의는 정원이 초과되었습니다.");
-        }
     }
 
     private void checkExistingStudent(NsUser user) {
@@ -50,7 +45,11 @@ public class SessionStudents {
         }
     }
 
-    public Set<Long> getStudentIds() {
+    public Long getSessionId() {
+        return sessionId;
+    }
+
+    public List<Long> getStudentIds() {
         return studentIds;
     }
 }

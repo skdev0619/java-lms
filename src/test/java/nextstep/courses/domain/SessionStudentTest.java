@@ -4,30 +4,18 @@ import nextstep.users.domain.NsUserTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 class SessionStudentTest {
 
-    @DisplayName("유료강의는 최대수강인원을 초과할 수 없다")
-    @Test
-    void validate() {
-        SessionStudents student = new SessionStudents(1);
-        Pricing pricing = new Pricing(PricingType.PAID, 10000);
-
-        student.addStudent(pricing, NsUserTest.JAVAJIGI);
-        assertThatIllegalStateException()
-                .isThrownBy(() -> student.addStudent(pricing, NsUserTest.SANJIGI))
-                .withMessage("이 강의는 정원이 초과되었습니다.");
-    }
-
     @DisplayName("동일한 유저는 중복으로 수강신청할 수 없다.")
     @Test
     void checkExistingStudent() {
-        SessionStudents student = new SessionStudents(2);
+        SessionStudents student = new SessionStudents(1L, List.of(1L));
         Pricing pricing = new Pricing(PricingType.PAID, 10000);
-
-        student.addStudent(pricing, NsUserTest.JAVAJIGI);
 
         assertThatIllegalStateException()
                 .isThrownBy(() -> student.addStudent(pricing, NsUserTest.JAVAJIGI))
@@ -37,7 +25,7 @@ class SessionStudentTest {
     @DisplayName("수강신청 성공하면 유저를 등록한다")
     @Test
     void addStudent() {
-        SessionStudents student = new SessionStudents(2);
+        SessionStudents student = new SessionStudents(1L);
         Pricing pricing = new Pricing(PricingType.PAID, 10000);
 
         student.addStudent(pricing, NsUserTest.JAVAJIGI);

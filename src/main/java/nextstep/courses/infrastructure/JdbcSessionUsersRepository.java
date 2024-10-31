@@ -1,8 +1,8 @@
 package nextstep.courses.infrastructure;
 
+import nextstep.courses.domain.SessionStudent;
+import nextstep.courses.domain.SessionStudents;
 import nextstep.courses.domain.SessionUsersRepository;
-import nextstep.courses.entity.SessionUsersEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,6 +14,8 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Repository
 public class JdbcSessionUsersRepository implements SessionUsersRepository {
 
@@ -24,23 +26,23 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
     }
 
     @Override
-    public int save(SessionUsersEntity users) {
+    public int save(SessionStudent student) {
         String sql = "insert into session_users (session_id, ns_user_id, creator_id, created_at, updated_at) values(?, ?, ?, ?, ?)";
 
         return jdbcTemplate.update(
                 sql,
-                users.getSession_id(),
-                users.getNs_user_id(),
-                users.getCreator_id(),
-                users.getCreated_at(),
-                users.getUpdated_at());
+                student.getSessionId(),
+                student.getNsUserId(),
+                student.getCreatorId(),
+                student.getCreatedAt(),
+                student.getCreatedAt());
     }
 
     @Override
-    public SessionUsersEntity findById(Long id) {
+    public SessionStudent findById(Long id) {
         String sql = "select id, session_id, ns_user_id, creator_id, created_at, updated_at from session_users where id = ?";
 
-        RowMapper<SessionUsersEntity> rowMapper = (rs, rowNum) -> new SessionUsersEntity(
+        RowMapper<SessionStudent> rowMapper = (rs, rowNum) -> new SessionStudent(
                 rs.getLong("id"),
                 rs.getLong("session_id"),
                 rs.getLong("ns_user_id"),
@@ -52,9 +54,9 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
     }
 
     @Override
-    public List<SessionUsersEntity> findBySessionId(Long sessionId) {
+    public SessionStudents findBySessionId(Long sessionId) {
         String sql = "select id, session_id, ns_user_id, creator_id, created_at, updated_at from session_users where session_id = ?";
-        RowMapper<SessionUsersEntity> rowMapper = (rs, rowNum) -> new SessionUsersEntity(
+        RowMapper<SessionStudent> rowMapper = (rs, rowNum) -> new SessionStudent(
                 rs.getLong("id"),
                 rs.getLong("session_id"),
                 rs.getLong("ns_user_id"),
@@ -62,7 +64,14 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
                 toLocalDateTime(rs.getTimestamp("created_at")),
                 toLocalDateTime(rs.getTimestamp("updated_at")));
 
-        return jdbcTemplate.query(sql, rowMapper, sessionId);
+        List<SessionStudent> students = jdbcTemplate.query(sql, rowMapper, sessionId);
+        return convertToStudents(sessionId, students);
+    }
+
+    private SessionStudents convertToStudents(Long sessionId, List<SessionStudent> students) {
+        List<Long> studentIds = students.stream().map(SessionStudent::getNsUserId)
+                .collect(toList());
+        return new SessionStudents(sessionId, studentIds);
     }
 
     @Override
@@ -72,23 +81,23 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
     }
 
     @Override
-    public int[] bulkSave(List<SessionUsersEntity> users) {
+    public int[] bulkSave(List<SessionStudent> students) {
         String sql = "insert into session_users (session_id, ns_user_id, creator_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
 
         return jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int index) throws SQLException {
-                SessionUsersEntity entity = users.get(index);
-                ps.setLong(1, entity.getSession_id());
-                ps.setLong(2, entity.getNs_user_id());
-                ps.setLong(3, entity.getCreator_id());
-                ps.setTimestamp(4, Timestamp.valueOf(entity.getCreated_at()));
-                ps.setTimestamp(5, Timestamp.valueOf(entity.getUpdated_at()));
+                SessionStudent student = students.get(index);
+                ps.setLong(1, student.getSessionId());
+                ps.setLong(2, student.getNsUserId());
+                ps.setLong(3, student.getCreatorId());
+                ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+                ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
             }
 
             @Override
             public int getBatchSize() {
-                return users.size();
+                return students.size();
             }
         });
     }
