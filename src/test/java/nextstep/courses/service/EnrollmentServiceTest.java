@@ -41,7 +41,7 @@ class EnrollmentServiceTest {
         List<SessionUsersEntity> sessionUsers = sessionUsersRepository.findBySessionId(10000L);
 
         SessionImage image = imageById.fromEntity();
-        SessionStudent student = SessionUsersEntity.of(sessionById.getAvailable_seat(), sessionUsers);
+        SessionStudents student = SessionUsersEntity.of(sessionById.getAvailable_seat(), sessionUsers);
         session = sessionById.of(10000L, image, student);
     }
 

@@ -28,8 +28,8 @@ class SessionImageTest {
     void validateFilePath(){
         String filePath = "확장자없는파일경로";
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> new SessionImage(filePath, 1_048_577, size))
-                .withMessage("이미지 크기가 1MB 이하여야 합니다");
+                .isThrownBy(() -> new SessionImage(filePath, 1_000, size))
+                .withMessage("유효하지 않은 파일 경로입니다");
     }
 
 }

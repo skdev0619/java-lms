@@ -1,6 +1,6 @@
 package nextstep.courses.entity;
 
-import nextstep.courses.domain.SessionStudent;
+import nextstep.courses.domain.SessionStudents;
 import nextstep.users.domain.NsUser;
 
 import java.time.LocalDateTime;
@@ -31,14 +31,14 @@ public class SessionUsersEntity {
         this.updated_at = updated_at;
     }
 
-    public static SessionStudent of(int availableSeat, List<SessionUsersEntity> sessionUsers) {
+    public static SessionStudents of(int availableSeat, List<SessionUsersEntity> sessionUsers) {
         Set<Long> studentIds = sessionUsers.stream()
                 .map(SessionUsersEntity::getNs_user_id)
                 .collect(toSet());
-        return new SessionStudent(availableSeat, studentIds);
+        return new SessionStudents(availableSeat, studentIds);
     }
 
-    public static List<SessionUsersEntity> toList(Long sessonId, SessionStudent student, NsUser loginUser){
+    public static List<SessionUsersEntity> toList(Long sessonId, SessionStudents student, NsUser loginUser){
         return student.getStudentIds().stream()
                 .map(user -> new SessionUsersEntity(sessonId, user, loginUser.getId(), LocalDateTime.now(), LocalDateTime.now()))
                 .collect(Collectors.toList());

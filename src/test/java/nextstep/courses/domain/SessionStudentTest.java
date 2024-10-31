@@ -12,7 +12,7 @@ class SessionStudentTest {
     @DisplayName("유료강의는 최대수강인원을 초과할 수 없다")
     @Test
     void validate() {
-        SessionStudent student = new SessionStudent(1);
+        SessionStudents student = new SessionStudents(1);
         Pricing pricing = new Pricing(PricingType.PAID, 10000);
 
         student.addStudent(pricing, NsUserTest.JAVAJIGI);
@@ -24,7 +24,7 @@ class SessionStudentTest {
     @DisplayName("동일한 유저는 중복으로 수강신청할 수 없다.")
     @Test
     void checkExistingStudent() {
-        SessionStudent student = new SessionStudent(2);
+        SessionStudents student = new SessionStudents(2);
         Pricing pricing = new Pricing(PricingType.PAID, 10000);
 
         student.addStudent(pricing, NsUserTest.JAVAJIGI);
@@ -37,7 +37,7 @@ class SessionStudentTest {
     @DisplayName("수강신청 성공하면 유저를 등록한다")
     @Test
     void addStudent() {
-        SessionStudent student = new SessionStudent(2);
+        SessionStudents student = new SessionStudents(2);
         Pricing pricing = new Pricing(PricingType.PAID, 10000);
 
         student.addStudent(pricing, NsUserTest.JAVAJIGI);

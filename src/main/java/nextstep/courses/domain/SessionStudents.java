@@ -5,16 +5,16 @@ import nextstep.users.domain.NsUser;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SessionStudent {
+public class SessionStudents {
 
     private final int availableSeats;
     private final Set<Long> studentIds;
 
-    public SessionStudent(int availableSeats){
+    public SessionStudents(int availableSeats){
         this(availableSeats, new HashSet<>());
     }
 
-    public SessionStudent(int availableSeats, Set<Long> studentIds) {
+    public SessionStudents(int availableSeats, Set<Long> studentIds) {
         this.availableSeats = availableSeats;
         this.studentIds = studentIds;
     }
@@ -43,8 +43,8 @@ public class SessionStudent {
     }
 
     private void checkExistingStudent(NsUser user) {
-        boolean isExistingStudent = studentIds.stream()
-                .anyMatch(student -> student.equals(user.getId()));
+        boolean isExistingStudent = studentIds.contains(user.getId());
+
         if (isExistingStudent) {
             throw new IllegalStateException("이미 수강신청한 유저입니다.");
         }

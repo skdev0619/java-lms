@@ -27,7 +27,7 @@ public class EnrollmentService {
         sessionUsersRepository.deleteBySessionId(session.getId());
         List<SessionUsersEntity> users = SessionUsersEntity.toList(
                 session.getId(),
-                session.getStudent(),
+                session.getStudents(),
                 request.getLoginUser());
         sessionUsersRepository.bulkSave(users);
     }

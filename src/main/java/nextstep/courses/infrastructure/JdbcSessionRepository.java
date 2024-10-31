@@ -32,8 +32,8 @@ public class JdbcSessionRepository implements SessionRepository {
                 session.getSession_status(),
                 session.getAvailable_seat(),
                 session.getCreator_id(),
-                session.getCreated_at(),
-                session.getUpdated_at());
+                LocalDateTime.now(),
+                LocalDateTime.now());
     }
 
     @Override
@@ -41,17 +41,17 @@ public class JdbcSessionRepository implements SessionRepository {
         String sql = "select id, course_id, start_date, end_date, pricing_type, price, session_status, available_seat, creator_id, created_at, updated_at from session where id = ?";
 
         RowMapper<SessionEntity> rowMapper = (rs, rowNum) -> new SessionEntity(
-                rs.getLong(1),
-                rs.getLong(2),
-                toLocalDateTime(rs.getTimestamp(3)),
-                toLocalDateTime(rs.getTimestamp(4)),
-                rs.getString(5),
-                rs.getInt(6),
-                rs.getString(7),
-                rs.getInt(8),
-                rs.getLong(9),
-                toLocalDateTime(rs.getTimestamp(10)),
-                toLocalDateTime(rs.getTimestamp(11)));
+                rs.getLong("id"),
+                rs.getLong("course_id"),
+                toLocalDateTime(rs.getTimestamp("start_date")),
+                toLocalDateTime(rs.getTimestamp("end_date")),
+                rs.getString("pricing_type"),
+                rs.getInt("price"),
+                rs.getString("session_status"),
+                rs.getInt("available_seat"),
+                rs.getLong("creator_id"),
+                toLocalDateTime(rs.getTimestamp("created_at")),
+                toLocalDateTime(rs.getTimestamp("updated_at")));
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 

@@ -2,7 +2,6 @@ package nextstep.courses.infrastructure;
 
 import nextstep.courses.domain.SessionImageRepository;
 import nextstep.courses.entity.SessionImageEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -15,7 +14,6 @@ public class JdbcSessionImageRepository implements SessionImageRepository {
 
     private final JdbcOperations jdbcTemplate;
 
-    @Autowired
     public JdbcSessionImageRepository(JdbcOperations jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -32,8 +30,8 @@ public class JdbcSessionImageRepository implements SessionImageRepository {
                 image.getWidth(),
                 image.getHeight(),
                 image.getCreator_id(),
-                image.getCreated_at(),
-                image.getUpdated_at());
+                LocalDateTime.now(),
+                LocalDateTime.now());
     }
 
     @Override
@@ -41,15 +39,15 @@ public class JdbcSessionImageRepository implements SessionImageRepository {
         String sql = "select id, session_id, file_path, file_size, width, height, creator_id, created_at, updated_at from session_image where id = ?";
 
         RowMapper<SessionImageEntity> rowMapper = (rs, rowNum) -> new SessionImageEntity(
-                rs.getLong(1),
-                rs.getLong(2),
-                rs.getString(3),
-                rs.getInt(4),
-                rs.getInt(5),
-                rs.getInt(6),
-                rs.getLong(7),
-                toLocalDateTime(rs.getTimestamp(8)),
-                toLocalDateTime(rs.getTimestamp(9)));
+                rs.getLong("id"),
+                rs.getLong("session_id"),
+                rs.getString("file_path"),
+                rs.getInt("file_size"),
+                rs.getInt("width"),
+                rs.getInt("height"),
+                rs.getLong("creator_id"),
+                toLocalDateTime(rs.getTimestamp("created_at")),
+                toLocalDateTime(rs.getTimestamp("updated_at")));
 
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }

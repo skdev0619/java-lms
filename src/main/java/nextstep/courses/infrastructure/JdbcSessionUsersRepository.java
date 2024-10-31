@@ -19,7 +19,6 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
 
     private JdbcOperations jdbcTemplate;
 
-    @Autowired
     public JdbcSessionUsersRepository(JdbcOperations jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -42,12 +41,12 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
         String sql = "select id, session_id, ns_user_id, creator_id, created_at, updated_at from session_users where id = ?";
 
         RowMapper<SessionUsersEntity> rowMapper = (rs, rowNum) -> new SessionUsersEntity(
-                rs.getLong(1),
-                rs.getLong(2),
-                rs.getLong(3),
-                rs.getLong(4),
-                toLocalDateTime(rs.getTimestamp(5)),
-                toLocalDateTime(rs.getTimestamp(6)));
+                rs.getLong("id"),
+                rs.getLong("session_id"),
+                rs.getLong("ns_user_id"),
+                rs.getLong("creator_id"),
+                toLocalDateTime(rs.getTimestamp("created_at")),
+                toLocalDateTime(rs.getTimestamp("updated_at")));
 
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
@@ -56,12 +55,12 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
     public List<SessionUsersEntity> findBySessionId(Long sessionId) {
         String sql = "select id, session_id, ns_user_id, creator_id, created_at, updated_at from session_users where session_id = ?";
         RowMapper<SessionUsersEntity> rowMapper = (rs, rowNum) -> new SessionUsersEntity(
-                rs.getLong(1),
-                rs.getLong(2),
-                rs.getLong(3),
-                rs.getLong(4),
-                toLocalDateTime(rs.getTimestamp(5)),
-                toLocalDateTime(rs.getTimestamp(6)));
+                rs.getLong("id"),
+                rs.getLong("session_id"),
+                rs.getLong("ns_user_id"),
+                rs.getLong("creator_id"),
+                toLocalDateTime(rs.getTimestamp("created_at")),
+                toLocalDateTime(rs.getTimestamp("updated_at")));
 
         return jdbcTemplate.query(sql, rowMapper, sessionId);
     }

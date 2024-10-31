@@ -16,36 +16,36 @@ public class Session {
 
     private final Pricing pricing;
 
-    private final SessionStudent student;
+    private final SessionStudents students;
 
-    private final Long creator_id;
+    private final Long creatorId;
 
-    private final LocalDateTime created_at;
+    private final LocalDateTime createdAt;
 
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 
-    public Session(SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, SessionStudent student, Long creator_id, LocalDateTime created_at) {
-        this(0L, dateRange, status, image, pricing, student, creator_id, created_at);
+    public Session(SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, SessionStudents student, Long creatorId, LocalDateTime createdAt) {
+        this(0L, dateRange, status, image, pricing, student, creatorId, createdAt);
     }
 
-    public Session(SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, int availableSeats, Long creator_id, LocalDateTime created_at) {
-        this(0L, dateRange, status, image, pricing, new SessionStudent(availableSeats), creator_id, created_at);
+    public Session(SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, int availableSeats, Long creatorId, LocalDateTime createdAt) {
+        this(0L, dateRange, status, image, pricing, new SessionStudents(availableSeats), creatorId, createdAt);
     }
 
-    public Session(Long id, SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, SessionStudent student, Long creator_id, LocalDateTime created_at) {
+    public Session(Long id, SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, SessionStudents student, Long creatorId, LocalDateTime createdAt) {
         this.id = id;
         this.dateRange = dateRange;
         this.status = status;
         this.image = image;
         this.pricing = pricing;
-        this.student = student;
-        this.creator_id = creator_id;
-        this.created_at = created_at;
+        this.students = student;
+        this.creatorId = creatorId;
+        this.createdAt = createdAt;
     }
 
     public void enrollStudent(NsUser loginUser, int payAmount) {
         checkEnrollmentPermission(payAmount);
-        student.addStudent(pricing, loginUser);
+        students.addStudent(pricing, loginUser);
     }
 
     private void checkEnrollmentPermission(int paymentAmount) {
@@ -85,19 +85,19 @@ public class Session {
         return pricing;
     }
 
-    public SessionStudent getStudent() {
-        return student;
+    public SessionStudents getStudents() {
+        return students;
     }
 
-    public Long getCreator_id() {
-        return creator_id;
+    public Long getCreatorId() {
+        return creatorId;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public LocalDateTime getUpdated_at() {
-        return updated_at;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }
