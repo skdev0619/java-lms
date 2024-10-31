@@ -36,9 +36,8 @@ class SessionTest {
                 LocalDateTime.of(2024, 10, 1, 0, 0),
                 LocalDateTime.of(2024, 10, 5, 23, 59)
         );
-        SessionImage image = new SessionImage("/image.png", 100, new Size(300, 200));
         Pricing pricing = new Pricing(type, price);
-        return new Session(dateRange, status, image, pricing, enrollmentLimit, 1L, LocalDateTime.now());
+        return new Session(1L, dateRange, status, null, pricing, enrollmentLimit, 1L, LocalDateTime.now());
     }
 
 }

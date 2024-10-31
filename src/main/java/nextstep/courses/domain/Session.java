@@ -8,6 +8,8 @@ public class Session {
 
     private final Long id;
 
+    private final Long courseId;
+
     private final SessionPeriod dateRange;
 
     private final SessionStatus status;
@@ -18,27 +20,31 @@ public class Session {
 
     private final SessionStudents students;
 
+    private final int availableSeats;
+
     private final Long creatorId;
 
     private final LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
-    public Session(SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, SessionStudents student, Long creatorId, LocalDateTime createdAt) {
-        this(0L, dateRange, status, image, pricing, student, creatorId, createdAt);
+    public Session(Long courseId, SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, int availableSeats, Long creatorId, LocalDateTime createdAt) {
+        this(0L, courseId, dateRange, status, image, pricing, null, availableSeats, creatorId, createdAt);
     }
 
-    public Session(SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, int availableSeats, Long creatorId, LocalDateTime createdAt) {
-        this(0L, dateRange, status, image, pricing, new SessionStudents(availableSeats), creatorId, createdAt);
+    public Session(Long courseId, SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, SessionStudents student, int availableSeats, Long creatorId, LocalDateTime createdAt) {
+        this(0L, courseId, dateRange, status, image, pricing, student, availableSeats, creatorId, createdAt);
     }
 
-    public Session(Long id, SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, SessionStudents student, Long creatorId, LocalDateTime createdAt) {
+    public Session(Long id, Long courseId, SessionPeriod dateRange, SessionStatus status, SessionImage image, Pricing pricing, SessionStudents student, int availableSeats, Long creatorId, LocalDateTime createdAt) {
         this.id = id;
+        this.courseId = courseId;
         this.dateRange = dateRange;
         this.status = status;
         this.image = image;
         this.pricing = pricing;
         this.students = student;
+        this.availableSeats = availableSeats;
         this.creatorId = creatorId;
         this.createdAt = createdAt;
     }
@@ -51,6 +57,7 @@ public class Session {
     private void checkEnrollmentPermission(int paymentAmount) {
         validateStatus();
         validatePrice(paymentAmount);
+        checkFullSession();
     }
 
     private void validateStatus() {
@@ -65,8 +72,22 @@ public class Session {
         }
     }
 
+    private void checkFullSession() {
+        if (pricing.isFree()) {
+            return;
+        }
+
+        if (students.getStudentIds().size() == availableSeats) {
+            throw new IllegalStateException("이 강의는 정원이 초과되었습니다.");
+        }
+    }
+
     public Long getId() {
         return id;
+    }
+
+    public Long getCourseId() {
+        return courseId;
     }
 
     public SessionPeriod getDateRange() {
@@ -87,6 +108,10 @@ public class Session {
 
     public SessionStudents getStudents() {
         return students;
+    }
+
+    public int getAvailableSeats() {
+        return availableSeats;
     }
 
     public Long getCreatorId() {

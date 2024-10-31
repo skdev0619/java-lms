@@ -1,9 +1,9 @@
 package nextstep.courses.domain;
 
-import nextstep.courses.entity.SessionEntity;
+import java.util.Optional;
 
 public interface SessionRepository {
-    int save(SessionEntity session);
+    int save(Session session);
 
-    SessionEntity findById(Long id);
+    Optional<Session> findById(Long id);
 }

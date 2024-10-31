@@ -1,5 +1,7 @@
 package nextstep.courses.domain;
 
+import java.util.Objects;
+
 public class Pricing {
 
     private final PricingType pricingType;
@@ -30,5 +32,26 @@ public class Pricing {
 
     public boolean canNotEnroll(int payAmount) {
         return !canEnroll(payAmount);
+    }
+
+    public PricingType getPricingType() {
+        return pricingType;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pricing pricing = (Pricing) o;
+        return price == pricing.price && pricingType == pricing.pricingType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pricingType, price);
     }
 }
