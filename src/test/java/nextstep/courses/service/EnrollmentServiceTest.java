@@ -18,35 +18,46 @@ import static org.assertj.core.api.Assertions.assertThat;
 class EnrollmentServiceTest {
 
     @Autowired
-    private CourseRepository courseRepository;
+    private EnrollmentService service;
 
     @Autowired
-    private EnrollmentService service;
+    SessionRepository sessionRepository;
+
+    @Autowired
+    SessionImageRepository sessionImageRepository;
+
+    @Autowired
+    SessionUsersRepository sessionUsersRepository;
+
+    private Session session;
 
     @BeforeEach
     void setUp() {
-        courseRepository.save(new Course("과정", 1L));
+        Session sessionById = sessionRepository.findById(10000L).get();
+        SessionImage sessionImage = sessionImageRepository.findById(10000L);
+
+        session = new Session(
+                10000L,
+                sessionById.getId(),
+                sessionById.getDateRange(),
+                sessionById.getStatus(),
+                sessionImage,
+                sessionById.getPricing(),
+                new SessionStudents(sessionById.getId()),
+                sessionById.getAvailableSeats(),
+                1L,
+                LocalDateTime.now()
+        );
     }
 
     @DisplayName("수강 신청 성공하면 수강 인원 목록에 유저가 포함된다")
     @Test
     void enrollSession() {
-        Session session = createSession();
-        EnrollRequest request = new EnrollRequest(1L, NsUserTest.SANJIGI, session, 10000);
+        EnrollRequest request = new EnrollRequest(NsUserTest.SANJIGI, session, 10000);
 
         service.enrollSession(request);
 
-        assertThat(session.getStudent().size()).isEqualTo(1);
+        SessionStudents students = sessionUsersRepository.findBySessionId(10000L);
+        assertThat(students.size()).isEqualTo(1);
     }
-
-    private Session createSession() {
-        SessionPeriod dateRange = new SessionPeriod(
-                LocalDateTime.of(2024, 10, 1, 0, 0),
-                LocalDateTime.of(2024, 10, 5, 23, 59)
-        );
-        Image image = new Image(new byte[]{}, new Size(300, 200), "jpg");
-        Pricing pricing = new Pricing(PricingType.PAID, 10000);
-        return new Session(dateRange, SessionStatus.RECRUITING, image, pricing, 50);
-    }
-
 }

@@ -1,35 +1,58 @@
 package nextstep.courses.domain;
 
-import nextstep.users.domain.NsUser;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 public class SessionStudent {
+    private final Long id;
 
-    private final int availableSeats;
-    private List<NsUser> students = new ArrayList<NsUser>();
+    private final Long sessionId;
 
-    public SessionStudent(int availableSeats) {
-        this.availableSeats = availableSeats;
+    private final Long nsUserId;
+
+    private final Long creatorId;
+
+    private final LocalDateTime createdAt;
+
+    private final LocalDateTime updatedAt;
+
+    public SessionStudent(Long sessionId, Long nsUserId, Long creatorId){
+        this(sessionId, nsUserId, creatorId, null, null);
     }
 
-    public void addStudent(Pricing pricing, NsUser user) {
-        checkAddStudent(pricing, user);
-        students.add(user);
+    public SessionStudent(Long sessionId, Long nsUserId, Long creatorId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this(null, sessionId, nsUserId, creatorId, createdAt, updatedAt);
     }
 
-    public int size(){
-        return students.size();
+    public SessionStudent(Long id, Long sessionId, Long nsUserId, Long creatorId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.sessionId = sessionId;
+        this.nsUserId = nsUserId;
+        this.creatorId = creatorId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    private void checkAddStudent(Pricing pricing, NsUser user) {
-        if (pricing.isFree()) {
-            return;
-        }
+    public Long getId() {
+        return id;
+    }
 
-        if (students.size() == availableSeats) {
-            throw new IllegalStateException("이 강의는 정원이 초과되었습니다.");
-        }
+    public Long getSessionId() {
+        return sessionId;
+    }
+
+    public Long getNsUserId() {
+        return nsUserId;
+    }
+
+    public Long getCreatorId() {
+        return creatorId;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }

@@ -2,9 +2,8 @@ package nextstep.courses.domain;
 
 public class Size {
 
-    private static final double WIDTH_RADIO = 3;
-    private static final double HEIGHT_RADIO = 2;
-
+    private static final double WIDTH_RATIO = 3;
+    private static final double HEIGHT_RATIO = 2;
     private static final int MIN_WIDTH = 300;
     private static final int MIN_HEIGHT = 200;
 
@@ -33,11 +32,19 @@ public class Size {
 
     private void validateRatio(int width, int height) {
         double ratio = (double) width / height;
-        double expectedRatio = WIDTH_RADIO / HEIGHT_RADIO;
+        double expectedRatio = WIDTH_RATIO / HEIGHT_RATIO;
 
         if (ratio != expectedRatio) {
             throw new IllegalArgumentException(
-                    String.format("가로와 세로의 비율은 %d:%d여야 합니다", WIDTH_RADIO, HEIGHT_RADIO));
+                    String.format("가로와 세로의 비율은 %d:%d여야 합니다", WIDTH_RATIO, HEIGHT_RATIO));
         }
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }
