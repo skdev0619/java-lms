@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,4 +41,17 @@ class SessionImageRepositoryTest {
                 .containsExactlyInAnyOrder(10000L, "/file_path.jpg");
     }
 
+    @DisplayName("하나의 강의에 하나 이상의 이미지 등록이 가능하다")
+    @Test
+    void saveMultiImage() {
+        Size size = new Size(300, 200);
+        SessionImage image1 = new SessionImage(999L, "/image_thumbnail.jpg",100, size, 1L, LocalDateTime.now(), LocalDateTime.now());
+        SessionImage image2 = new SessionImage(999L, "/image.jpg",100, size, 1L, LocalDateTime.now(), LocalDateTime.now());
+
+        sessionImageRepository.save(image1);
+        sessionImageRepository.save(image2);
+
+        List<SessionImage> images = sessionImageRepository.findBySessionId(999L);
+        assertThat(images).hasSize(2);
+    }
 }
