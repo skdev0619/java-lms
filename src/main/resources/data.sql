@@ -1,5 +1,5 @@
-INSERT INTO ns_user (id, user_id, password, name, email, created_at) values (1, 'javajigi', 'test', '자바지기', 'javajigi@slipp.net', CURRENT_TIMESTAMP());
-INSERT INTO ns_user (id, user_id, password, name, email, created_at) values (2, 'sanjigi', 'test', '산지기', 'sanjigi@slipp.net', CURRENT_TIMESTAMP());
+INSERT INTO ns_user (id, user_id, password, name, email, selected_flag, created_at) values (1, 'javajigi', 'test', '자바지기', 'javajigi@slipp.net', true, CURRENT_TIMESTAMP());
+INSERT INTO ns_user (id, user_id, password, name, email, selected_flag, created_at) values (2, 'sanjigi', 'test', '산지기', 'sanjigi@slipp.net', true, CURRENT_TIMESTAMP());
 
 INSERT INTO course(id, title, creator_id, created_at, updated_at) values (10000, '강의제목', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
