@@ -1,9 +1,6 @@
 package nextstep.courses.service;
 
-import nextstep.courses.domain.Session;
-import nextstep.courses.domain.SessionRepository;
-import nextstep.courses.domain.SessionStudent;
-import nextstep.courses.domain.SessionUsersRepository;
+import nextstep.courses.domain.*;
 import nextstep.users.domain.NsUser;
 import nextstep.users.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +40,8 @@ public class EnrollmentService {
 
         session.enrollStudent(request.getLoginUser(), request.getPayAmount());
 
-        sessionUsersRepository.deleteBySessionId(session.getId());
         List<SessionStudent> users = List.of(
-                new SessionStudent(session.getId(), loginUser.getId(), loginUser.getId())
+                new SessionStudent(session.getId(), loginUser.getId())
         );
         sessionUsersRepository.bulkSave(users);
     }

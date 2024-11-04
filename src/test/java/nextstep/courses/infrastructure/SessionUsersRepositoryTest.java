@@ -32,8 +32,8 @@ class SessionUsersRepositoryTest {
     @DisplayName("특정 강의를 듣고 있는 수강생들을 조회한다")
     @Test
     void findBySessionId() {
-        SessionStudent student1 = new SessionStudent(10000L, 1L, 1L, LocalDateTime.now(), LocalDateTime.now());
-        SessionStudent student2 = new SessionStudent(10000L, 2L, 1L, LocalDateTime.now(), LocalDateTime.now());
+        SessionStudent student1 = new SessionStudent(10000L, 1L);
+        SessionStudent student2 = new SessionStudent(10000L, 2L);
         sessionUsersRepository.save(student1);
         sessionUsersRepository.save(student2);
 
@@ -46,8 +46,6 @@ class SessionUsersRepositoryTest {
     @DisplayName("특정 강의를 듣고 있는 수강생 리스트를 삭제한다")
     @Test
     void deleteBySessionId() {
-        sessionUsersRepository.deleteBySessionId(10000L);
-
         SessionStudents students = sessionUsersRepository.findBySessionId(10000L);
 
         assertThat(students.size()).isEqualTo(0);
@@ -56,11 +54,9 @@ class SessionUsersRepositoryTest {
     @DisplayName("특정 강의를 듣고 있는 수강생 목록을 일괄 추가한다")
     @Test
     void bulkInsert() {
-        sessionUsersRepository.deleteBySessionId(10000L);
-
         List<SessionStudent> students = List.of(
-                new SessionStudent(10000L, 1L, 1L, LocalDateTime.now(), LocalDateTime.now()),
-                new SessionStudent(10000L, 2L, 1L, LocalDateTime.now(), LocalDateTime.now())
+                new SessionStudent(10000L, 1L),
+                new SessionStudent(10000L, 2L)
         );
         sessionUsersRepository.bulkSave(students);
 

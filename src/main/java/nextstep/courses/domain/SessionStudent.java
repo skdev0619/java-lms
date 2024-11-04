@@ -9,27 +9,14 @@ public class SessionStudent {
 
     private final Long nsUserId;
 
-    private final Long creatorId;
-
-    private final LocalDateTime createdAt;
-
-    private final LocalDateTime updatedAt;
-
-    public SessionStudent(Long sessionId, Long nsUserId, Long creatorId){
-        this(sessionId, nsUserId, creatorId, null, null);
+    public SessionStudent(Long sessionId, Long nsUserId) {
+        this(null, sessionId, nsUserId);
     }
 
-    public SessionStudent(Long sessionId, Long nsUserId, Long creatorId, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this(null, sessionId, nsUserId, creatorId, createdAt, updatedAt);
-    }
-
-    public SessionStudent(Long id, Long sessionId, Long nsUserId, Long creatorId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public SessionStudent(Long id, Long sessionId, Long nsUserId) {
         this.id = id;
         this.sessionId = sessionId;
         this.nsUserId = nsUserId;
-        this.creatorId = creatorId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public Long getId() {
@@ -42,17 +29,5 @@ public class SessionStudent {
 
     public Long getNsUserId() {
         return nsUserId;
-    }
-
-    public Long getCreatorId() {
-        return creatorId;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
     }
 }

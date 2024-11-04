@@ -10,8 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -27,15 +25,13 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
 
     @Override
     public int save(SessionStudent student) {
-        String sql = "insert into session_users (session_id, ns_user_id, creator_id, created_at, updated_at) values(?, ?, ?, ?, ?)";
+        String sql = "insert into session_users (session_id, ns_user_id) values(?, ?)";
 
         return jdbcTemplate.update(
                 sql,
                 student.getSessionId(),
-                student.getNsUserId(),
-                student.getCreatorId(),
-                student.getCreatedAt(),
-                student.getCreatedAt());
+                student.getNsUserId()
+        );
     }
 
     @Override
@@ -45,24 +41,20 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
         RowMapper<SessionStudent> rowMapper = (rs, rowNum) -> new SessionStudent(
                 rs.getLong("id"),
                 rs.getLong("session_id"),
-                rs.getLong("ns_user_id"),
-                rs.getLong("creator_id"),
-                toLocalDateTime(rs.getTimestamp("created_at")),
-                toLocalDateTime(rs.getTimestamp("updated_at")));
+                rs.getLong("ns_user_id")
+        );
 
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     @Override
     public SessionStudents findBySessionId(Long sessionId) {
-        String sql = "select id, session_id, ns_user_id, creator_id, created_at, updated_at from session_users where session_id = ?";
+        String sql = "select id, session_id, ns_user_id from session_users where session_id = ?";
         RowMapper<SessionStudent> rowMapper = (rs, rowNum) -> new SessionStudent(
                 rs.getLong("id"),
                 rs.getLong("session_id"),
-                rs.getLong("ns_user_id"),
-                rs.getLong("creator_id"),
-                toLocalDateTime(rs.getTimestamp("created_at")),
-                toLocalDateTime(rs.getTimestamp("updated_at")));
+                rs.getLong("ns_user_id")
+        );
 
         List<SessionStudent> students = jdbcTemplate.query(sql, rowMapper, sessionId);
         return convertToStudents(sessionId, students);
@@ -82,7 +74,7 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
 
     @Override
     public int[] bulkSave(List<SessionStudent> students) {
-        String sql = "insert into session_users (session_id, ns_user_id, creator_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
+        String sql = "insert into session_users (session_id, ns_user_id) VALUES (?, ?)";
 
         return jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
@@ -90,9 +82,6 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
                 SessionStudent student = students.get(index);
                 ps.setLong(1, student.getSessionId());
                 ps.setLong(2, student.getNsUserId());
-                ps.setLong(3, student.getCreatorId());
-                ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
             }
 
             @Override
@@ -102,10 +91,4 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
         });
     }
 
-    private LocalDateTime toLocalDateTime(Timestamp timestamp) {
-        if (timestamp == null) {
-            return null;
-        }
-        return timestamp.toLocalDateTime();
-    }
 }
