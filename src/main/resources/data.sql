@@ -4,8 +4,8 @@ INSERT INTO ns_user (id, user_id, password, name, email, selected_flag, created_
 
 INSERT INTO course(id, title, creator_id, created_at, updated_at) values (10000, '강의제목', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
-INSERT INTO session(id, course_id, start_date, end_date, pricing_type, price, session_status, available_seat, creator_id, created_at, updated_at)
-values (10000, 10000, '2024-10-01 00:00:00', '2024-10-30 23:59:59', 'PAID', 10000, 'RECRUITING', 50, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+INSERT INTO session(id, course_id, start_date, end_date, pricing_type, price, progress_status, recruit_flag, available_seat, creator_id, created_at, updated_at)
+values (10000, 10000, '2024-10-01 00:00:00', '2024-10-30 23:59:59', 'PAID', 10000, 'PREPARING', true, 50, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
 INSERT INTO session_image(id, session_id, file_path, file_size, width, height, creator_id, created_at, updated_at)
 values (10000, 10000, '/test_image.jpg', 100, 300, 200, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
