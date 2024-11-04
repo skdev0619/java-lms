@@ -55,7 +55,7 @@ public class Session {
 
     public void enrollStudent(NsUser loginUser, int payAmount) {
         checkEnrollmentPermission(payAmount);
-        students.addStudent(pricing, loginUser);
+        students.addStudent(loginUser);
     }
 
     private void checkEnrollmentPermission(int paymentAmount) {

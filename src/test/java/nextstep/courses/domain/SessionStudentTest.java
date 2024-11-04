@@ -18,7 +18,7 @@ class SessionStudentTest {
         Pricing pricing = new Pricing(PricingType.PAID, 10000);
 
         assertThatIllegalStateException()
-                .isThrownBy(() -> student.addStudent(pricing, NsUserTest.JAVAJIGI))
+                .isThrownBy(() -> student.addStudent(NsUserTest.JAVAJIGI))
                 .withMessage("이미 수강신청한 유저입니다.");
     }
 
@@ -28,8 +28,8 @@ class SessionStudentTest {
         SessionStudents student = new SessionStudents(1L);
         Pricing pricing = new Pricing(PricingType.PAID, 10000);
 
-        student.addStudent(pricing, NsUserTest.JAVAJIGI);
-        student.addStudent(pricing, NsUserTest.SANJIGI);
+        student.addStudent(NsUserTest.JAVAJIGI);
+        student.addStudent(NsUserTest.SANJIGI);
 
         assertThat(student.size()).isEqualTo(2);
     }

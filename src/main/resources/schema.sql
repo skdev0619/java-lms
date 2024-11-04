@@ -14,7 +14,6 @@ create table session (
     end_date   timestamp not null /*강의 종료일*/,
     pricing_type varchar(10) not null /*무료(FREE)/유료(PAID)*/,
     price int not null /*강의 가격*/,
-    session_status  varchar(10) not null /*준비(PREPARING)/모집중(RECRUITING)/종료(FINISHED)*/,
     progress_status varchar(20)  /*준비중(PREPARING), 진행중(IN_PROGRESS), 종료(COMPLETED)*/,
     recruit_flag boolean   /*비모집중(false), 모집중(true)*/,
     available_seat int not null /*최대 수강 인원*/,

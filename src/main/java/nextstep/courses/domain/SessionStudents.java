@@ -24,8 +24,8 @@ public class SessionStudents {
         this.studentIds = studentIds;
     }
 
-    public void addStudent(Pricing pricing, NsUser user) {
-        checkAddStudent(pricing, user);
+    public void addStudent(NsUser user) {
+        checkAddStudent(user);
         studentIds.add(user.getId());
     }
 
@@ -33,8 +33,9 @@ public class SessionStudents {
         return studentIds.size();
     }
 
-    private void checkAddStudent(Pricing pricing, NsUser user) {
+    private void checkAddStudent(NsUser user) {
         checkExistingStudent(user);
+        checkSelectedStudent(user);
     }
 
     private void checkExistingStudent(NsUser user) {
@@ -42,6 +43,12 @@ public class SessionStudents {
 
         if (isExistingStudent) {
             throw new IllegalStateException("이미 수강신청한 유저입니다.");
+        }
+    }
+
+    private void checkSelectedStudent(NsUser user) {
+        if(user.isNotSelected()){
+            throw new IllegalStateException("승인된 유저만 수강신청 가능합니다.");
         }
     }
 
