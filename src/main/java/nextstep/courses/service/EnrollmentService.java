@@ -40,9 +40,7 @@ public class EnrollmentService {
 
         session.enrollStudent(request.getLoginUser(), request.getPayAmount());
 
-        List<SessionStudent> users = List.of(
-                new SessionStudent(session.getId(), loginUser.getId())
-        );
-        sessionUsersRepository.bulkSave(users);
+        SessionStudent student = new SessionStudent(session.getId(), loginUser.getId());
+        sessionUsersRepository.save(student);
     }
 }
