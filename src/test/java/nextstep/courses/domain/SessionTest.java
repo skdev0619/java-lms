@@ -44,17 +44,6 @@ class SessionTest {
 
     }
 
-    @DisplayName("선발되지 않은 회원은 수강신청 할 수 없다")
-    @Test
-    void checkSelectedUser(){
-        Session session = createSession(new Status(ProgressStatus.IN_PROGRESS, RecruitmentStatus.RECRUITING), PricingType.PAID, 10000, 50);
-
-        assertThatIllegalStateException()
-                .isThrownBy(() -> session.enrollStudent(NsUserTest.NOT_SELECTED, 10000))
-                .withMessage("승인된 유저만 수강신청 가능합니다.");
-
-    }
-
     private Session createSession(Status status, PricingType type, int price, int enrollmentLimit) {
         SessionPeriod dateRange = new SessionPeriod(
                 LocalDateTime.of(2024, 10, 1, 0, 0),

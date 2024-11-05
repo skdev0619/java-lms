@@ -49,7 +49,6 @@ create table ns_user (
     password varchar(20) not null,
     name varchar(20) not null,
     email varchar(50),
-    selected_flag boolean default false,
     created_at timestamp not null,
     updated_at timestamp,
     primary key (id)
