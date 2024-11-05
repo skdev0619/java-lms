@@ -55,9 +55,18 @@ public class Session {
 
     public void enrollStudent(NsUser loginUser, int payAmount) {
         checkEnrollmentPermission(payAmount);
-        students.addStudent(loginUser);
+        students.addStudent(new SessionStudent(id, loginUser.getId()));
     }
 
+    public void approve(){
+        students.approveStudent();
+    }
+
+    public void cancel(){
+        students.cancelStudent();
+    }
+
+    //region checkEnrollmentPermission
     private void checkEnrollmentPermission(int paymentAmount) {
         validateStatus();
         validatePrice(paymentAmount);
@@ -81,10 +90,11 @@ public class Session {
             return;
         }
 
-        if (students.getStudentIds().size() == availableSeats) {
+        if (students.size() == availableSeats) {
             throw new IllegalStateException("이 강의는 정원이 초과되었습니다.");
         }
     }
+    //endregion
 
     public Long getId() {
         return id;

@@ -50,6 +50,6 @@ class SessionTest {
                 LocalDateTime.of(2024, 10, 5, 23, 59)
         );
         Pricing pricing = new Pricing(type, price);
-        return new Session(1L, dateRange, status, null, pricing, new SessionStudents(10000L), enrollmentLimit, 1L, LocalDateTime.now());
+        return new Session(1L, dateRange, status, null, pricing, new SessionStudents(), enrollmentLimit, 1L, LocalDateTime.now());
     }
 }
