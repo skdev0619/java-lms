@@ -19,7 +19,7 @@ public class JdbcSessionRepository implements SessionRepository {
 
     @Override
     public int save(Session session) {
-        String sql = "insert into session(course_id, start_date, end_date, pricing_type, price, progress_status, recruit_flag, available_seat, creator_id, created_at, updated_at) " +
+        String sql = "insert into session(course_id, start_date, end_date, pricing_type, price, progress_status, recruit_status, available_seat, creator_id, created_at, updated_at) " +
                      "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         return jdbcTemplate.update(
@@ -30,7 +30,7 @@ public class JdbcSessionRepository implements SessionRepository {
                 session.getPricing().getPricingType().name(),
                 session.getPricing().getPrice(),
                 session.getStatus().getProgressStatus().name(),
-                session.getStatus().isRecruitFlag(),
+                session.getStatus().getRecruitmentStatus().name(),
                 session.getAvailableSeats(),
                 session.getCreatorId(),
                 LocalDateTime.now(),
@@ -39,7 +39,7 @@ public class JdbcSessionRepository implements SessionRepository {
 
     @Override
     public Optional<Session> findById(Long id) {
-        String sql = "select id, course_id, start_date, end_date, pricing_type, price, progress_status, recruit_flag, available_seat, creator_id, created_at, updated_at from session where id = ?";
+        String sql = "select id, course_id, start_date, end_date, pricing_type, price, progress_status, recruit_status, available_seat, creator_id, created_at, updated_at from session where id = ?";
 
         RowMapper<Session> rowMapper = (rs, rowNum) -> new Session(
                 rs.getLong("id"),
@@ -50,7 +50,7 @@ public class JdbcSessionRepository implements SessionRepository {
                 ),
                 new Status(
                         ProgressStatus.valueOf(rs.getString("progress_status")),
-                        rs.getBoolean("recruit_flag")
+                        RecruitmentStatus.valueOf(rs.getString("recruit_status"))
                 ),
                 null,
                 new Pricing(

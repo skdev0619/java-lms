@@ -15,7 +15,7 @@ create table session (
     pricing_type varchar(10) not null /*무료(FREE)/유료(PAID)*/,
     price int not null /*강의 가격*/,
     progress_status varchar(20)  /*준비중(PREPARING), 진행중(IN_PROGRESS), 종료(COMPLETED)*/,
-    recruit_flag boolean   /*비모집중(false), 모집중(true)*/,
+    recruit_status varchar(20) /*모집중(RECRUITING), 비모집중(NOT_RECRUITING)*/,
     available_seat int not null /*최대 수강 인원*/,
     creator_id bigint not null  /*생성한 user id pk*/,
     created_at timestamp not null /*생성일자*/,

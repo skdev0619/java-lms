@@ -31,7 +31,7 @@ class SessionRepositoryTest {
         Session session = new Session(
                 10000L,
                 createSessionPeriod(),
-                new Status(ProgressStatus.IN_PROGRESS, true),
+                new Status(ProgressStatus.IN_PROGRESS, RecruitmentStatus.RECRUITING),
                 null,
                 new Pricing(PricingType.PAID, 10000),
                 50,

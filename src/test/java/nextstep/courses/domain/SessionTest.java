@@ -14,7 +14,7 @@ class SessionTest {
     @DisplayName("강의 진행 상태가 종료이면 수강 신청 할 수 없다")
     @Test
     void validateSessionStatus() {
-        Session session = createSession(new Status(ProgressStatus.FINISHED, false), PricingType.PAID, 10000, 50);
+        Session session = createSession(new Status(ProgressStatus.FINISHED, RecruitmentStatus.NOT_RECRUITING), PricingType.PAID, 10000, 50);
 
         assertThatIllegalStateException()
                 .isThrownBy(() -> session.enrollStudent(NsUserTest.JAVAJIGI, 10000))
@@ -24,7 +24,7 @@ class SessionTest {
     @DisplayName("강의 진행 상태가 진행 중이어도 모집 상태가 모집 중이면 모집 가능하다")
     @Test
     void validateStatus() {
-        Session session = createSession(new Status(ProgressStatus.IN_PROGRESS, true), PricingType.PAID, 10000, 50);
+        Session session = createSession(new Status(ProgressStatus.IN_PROGRESS, RecruitmentStatus.RECRUITING), PricingType.PAID, 10000, 50);
 
 
         session.enrollStudent(NsUserTest.JAVAJIGI, 10000);
@@ -36,7 +36,7 @@ class SessionTest {
     @DisplayName("유료강의는 강의 가격과 지불한 돈이 일치하지 않으면 수강할 수 없다")
     @Test
     void lessPay() {
-        Session session = createSession(new Status(ProgressStatus.IN_PROGRESS, true), PricingType.PAID, 10000, 50);
+        Session session = createSession(new Status(ProgressStatus.IN_PROGRESS, RecruitmentStatus.RECRUITING), PricingType.PAID, 10000, 50);
 
         assertThatIllegalStateException()
                 .isThrownBy(() -> session.enrollStudent(NsUserTest.JAVAJIGI, 9999))
@@ -47,7 +47,7 @@ class SessionTest {
     @DisplayName("선발되지 않은 회원은 수강신청 할 수 없다")
     @Test
     void checkSelectedUser(){
-        Session session = createSession(new Status(ProgressStatus.IN_PROGRESS, true), PricingType.PAID, 10000, 50);
+        Session session = createSession(new Status(ProgressStatus.IN_PROGRESS, RecruitmentStatus.RECRUITING), PricingType.PAID, 10000, 50);
 
         assertThatIllegalStateException()
                 .isThrownBy(() -> session.enrollStudent(NsUserTest.NOT_SELECTED, 10000))

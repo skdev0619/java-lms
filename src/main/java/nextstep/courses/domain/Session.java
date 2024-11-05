@@ -37,7 +37,7 @@ public class Session {
     }
 
     public Session(Long courseId, SessionPeriod dateRange, SessionImage image, Pricing pricing, SessionStudents student, int availableSeats, Long creatorId, LocalDateTime createdAt) {
-        this(0L, courseId, dateRange, new Status(ProgressStatus.IN_PROGRESS, true), image, pricing, student, availableSeats, creatorId, createdAt);
+        this(0L, courseId, dateRange, new Status(ProgressStatus.PREPARING, RecruitmentStatus.RECRUITING), image, pricing, student, availableSeats, creatorId, createdAt);
     }
 
     public Session(Long id, Long courseId, SessionPeriod dateRange, Status status, SessionImage image, Pricing pricing, SessionStudents student, int availableSeats, Long creatorId, LocalDateTime createdAt) {
@@ -78,10 +78,6 @@ public class Session {
 
     private void checkFullSession() {
         if (pricing.isFree()) {
-            return;
-        }
-
-        if(students.getStudentIds().isEmpty()){
             return;
         }
 

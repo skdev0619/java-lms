@@ -2,15 +2,15 @@ package nextstep.courses.domain;
 
 public class Status {
     private final ProgressStatus progressStatus;
-    private final boolean recruitFlag;
+    private final RecruitmentStatus recruitmentStatus;
 
-    public Status(ProgressStatus progressStatus, boolean recruitFlag) {
+    public Status(ProgressStatus progressStatus, RecruitmentStatus recruitmentStatus) {
         this.progressStatus = progressStatus;
-        this.recruitFlag = recruitFlag;
+        this.recruitmentStatus = recruitmentStatus;
     }
 
     public boolean canEnroll(){
-        return progressStatus.isNotFinished() && recruitFlag;
+        return progressStatus.isNotFinished() && recruitmentStatus.canEnroll();
     }
 
     public boolean canNotEnroll(){
@@ -21,7 +21,7 @@ public class Status {
         return progressStatus;
     }
 
-    public boolean isRecruitFlag() {
-        return recruitFlag;
+    public RecruitmentStatus getRecruitmentStatus() {
+        return recruitmentStatus;
     }
 }
