@@ -3,6 +3,7 @@ package nextstep.courses.infrastructure;
 import nextstep.courses.domain.SessionStudent;
 import nextstep.courses.domain.SessionStudents;
 import nextstep.courses.domain.SessionUsersRepository;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,8 +39,9 @@ class SessionUsersRepositoryTest {
 
         SessionStudents students = sessionUsersRepository.findBySessionId(10000L);
 
-        assertThat(students).extracting("sessionId", "studentIds")
-                .contains(10000L, List.of(1L, 2L));
+        assertThat(students.getStudents()).extracting("sessionId", "nsUserId")
+                .containsExactlyInAnyOrder(new Tuple(10000L, 1L),
+                        new Tuple(10000L, 2L));
     }
 
     @DisplayName("특정 강의를 듣고 있는 수강생 리스트를 삭제한다")

@@ -36,12 +36,13 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
 
     @Override
     public SessionStudent findById(Long id) {
-        String sql = "select id, session_id, ns_user_id, creator_id, created_at, updated_at from session_users where id = ?";
+        String sql = "select id, session_id, ns_user_id, is_approved from session_users where id = ?";
 
         RowMapper<SessionStudent> rowMapper = (rs, rowNum) -> new SessionStudent(
                 rs.getLong("id"),
                 rs.getLong("session_id"),
-                rs.getLong("ns_user_id")
+                rs.getLong("ns_user_id"),
+                rs.getBoolean("is_approved")
         );
 
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
@@ -49,21 +50,16 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
 
     @Override
     public SessionStudents findBySessionId(Long sessionId) {
-        String sql = "select id, session_id, ns_user_id from session_users where session_id = ?";
+        String sql = "select id, session_id, ns_user_id, is_approved from session_users where session_id = ?";
         RowMapper<SessionStudent> rowMapper = (rs, rowNum) -> new SessionStudent(
                 rs.getLong("id"),
                 rs.getLong("session_id"),
-                rs.getLong("ns_user_id")
+                rs.getLong("ns_user_id"),
+                rs.getBoolean("is_approved")
         );
 
         List<SessionStudent> students = jdbcTemplate.query(sql, rowMapper, sessionId);
-        return convertToStudents(sessionId, students);
-    }
-
-    private SessionStudents convertToStudents(Long sessionId, List<SessionStudent> students) {
-        List<Long> studentIds = students.stream().map(SessionStudent::getNsUserId)
-                .collect(toList());
-        return new SessionStudents(sessionId, studentIds);
+        return new SessionStudents(students);
     }
 
     @Override

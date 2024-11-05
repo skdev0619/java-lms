@@ -43,7 +43,7 @@ class EnrollmentServiceTest {
                 sessionById.getStatus(),
                 sessionImage,
                 sessionById.getPricing(),
-                new SessionStudents(sessionById.getId()),
+                new SessionStudents(),
                 sessionById.getAvailableSeats(),
                 1L,
                 LocalDateTime.now()
