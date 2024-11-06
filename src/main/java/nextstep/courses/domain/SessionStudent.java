@@ -7,7 +7,7 @@ public class SessionStudent {
 
     private final Long nsUserId;
 
-    private final boolean isSelected;
+    private boolean isSelected;
 
     public SessionStudent(Long sessionId, Long nsUserId) {
         this(null, sessionId, nsUserId, false);
@@ -22,6 +22,10 @@ public class SessionStudent {
         this.sessionId = sessionId;
         this.nsUserId = nsUserId;
         this.isSelected = isSelected;
+    }
+
+    public void updateSelected() {
+        isSelected = true;
     }
 
     public Long getId() {

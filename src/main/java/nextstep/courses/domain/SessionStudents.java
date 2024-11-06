@@ -1,19 +1,10 @@
 package nextstep.courses.domain;
 
-import nextstep.users.domain.NsUser;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 public class SessionStudents {
     private List<SessionStudent> students;
-    private List<SessionStudent> approvedStudents = new ArrayList<>();
 
     public SessionStudents() {
         students = new ArrayList<>();
@@ -28,37 +19,18 @@ public class SessionStudents {
         students.add(student);
     }
 
-    public void approveStudent() {
+    public void filterSelectedStudents() {
+        List<SessionStudent> approveStudents = new ArrayList<>();
         for (SessionStudent student : students) {
-            addApprovedStudent(student);
+            if(student.isNotSelected()) continue;
+            student.updateSelected();
+            approveStudents.add(student);
         }
-    }
-
-    private void addApprovedStudent(SessionStudent student) {
-        if(student.isSelected()){
-            approvedStudents.add(student);
-        }
-    }
-
-    public void cancelStudent() {
-        for (SessionStudent student : students) {
-            removeUnApprovedStudent(student);
-        }
-    }
-
-    private void removeUnApprovedStudent(SessionStudent student) {
-        if(student.isNotSelected()){
-            approvedStudents.remove(student);
-            students.remove(student);
-        }
+        students = approveStudents;
     }
 
     public int size() {
         return students.size();
-    }
-
-    public int approvedSize() {
-        return approvedStudents.size();
     }
 
     private void checkAddStudent(SessionStudent student) {
@@ -76,10 +48,6 @@ public class SessionStudents {
     }
 
     public List<SessionStudent> getStudents() {
-        return students;
-    }
-
-    public List<SessionStudent> getApprovedStudents() {
-        return approvedStudents;
+        return new ArrayList<>(students);
     }
 }

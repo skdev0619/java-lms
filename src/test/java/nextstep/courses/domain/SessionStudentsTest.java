@@ -21,7 +21,7 @@ class SessionStudentsTest {
         assertThat(students.size()).isEqualTo(1);
     }
 
-    @DisplayName("선발되지 않은 인원은 수강 취소한다")
+    @DisplayName("선발된 인원만 수강 승인되고 선발 안된 인원은 수강 취소된다")
     @Test
     void cancelStudent(){
         SessionStudent approveStudent = new SessionStudent(10000L, NsUserTest.JAVAJIGI.getId(), false);
@@ -32,24 +32,8 @@ class SessionStudentsTest {
         studentGroup.add(cancelStudent);
         SessionStudents students = new SessionStudents(studentGroup);
 
-        students.cancelStudent();
+        students.filterSelectedStudents();
 
         assertThat(students.size()).isEqualTo(1);
-    }
-    
-    @DisplayName("선발된 인원만 수강 승인된다")
-    @Test
-    void approveStudent(){
-        SessionStudent approveStudent = new SessionStudent(10000L, NsUserTest.JAVAJIGI.getId(), true);
-        SessionStudent cancelStudent = new SessionStudent(10000L, NsUserTest.JAVAJIGI.getId(), false);
-
-        List<SessionStudent> studentGroup = new ArrayList<>();
-        studentGroup.add(approveStudent);
-        studentGroup.add(cancelStudent);
-        SessionStudents students = new SessionStudents(studentGroup);
-
-        students.approveStudent();
-
-        assertThat(students.getApprovedStudents()).hasSize(1);
     }
 }

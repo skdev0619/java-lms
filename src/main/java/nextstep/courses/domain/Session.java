@@ -58,12 +58,8 @@ public class Session {
         students.addStudent(new SessionStudent(id, loginUser.getId()));
     }
 
-    public void approve(){
-        students.approveStudent();
-    }
-
-    public void cancel(){
-        students.cancelStudent();
+    public void filterSelectedStudents(){
+        students.filterSelectedStudents();
     }
 
     //region checkEnrollmentPermission
