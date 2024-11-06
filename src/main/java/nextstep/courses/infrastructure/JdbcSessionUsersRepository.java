@@ -6,6 +6,8 @@ import nextstep.courses.domain.SessionUsersRepository;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -24,14 +26,19 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
     }
 
     @Override
-    public int save(SessionStudent student) {
+    public Long save(SessionStudent student) {
         String sql = "insert into session_users (session_id, ns_user_id) values(?, ?)";
 
-        return jdbcTemplate.update(
-                sql,
-                student.getSessionId(),
-                student.getNsUserId()
-        );
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[] {"id"}); // "id"는 자동 생성되는 열 이름
+            ps.setLong(1, student.getSessionId());
+            ps.setLong(2, student.getNsUserId());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     @Override
@@ -46,6 +53,12 @@ public class JdbcSessionUsersRepository implements SessionUsersRepository {
         );
 
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
+    }
+
+    @Override
+    public int updateBySelected(Long id, boolean isSelected) {
+        String sql = "update session_users set is_approved = ? where id = ?";
+        return jdbcTemplate.update(sql, isSelected, id);
     }
 
     @Override

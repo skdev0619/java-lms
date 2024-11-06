@@ -47,8 +47,12 @@ class SessionUsersRepositoryTest {
     @DisplayName("특정 강의를 듣고 있는 수강생 리스트를 삭제한다")
     @Test
     void deleteBySessionId() {
-        SessionStudents students = sessionUsersRepository.findBySessionId(10000L);
+        sessionUsersRepository.save(new SessionStudent(10000L, 1L));
+        sessionUsersRepository.save(new SessionStudent(10000L, 2L));
 
+        sessionUsersRepository.deleteBySessionId(10000L);
+
+        SessionStudents students = sessionUsersRepository.findBySessionId(10000L);
         assertThat(students.size()).isEqualTo(0);
     }
 
@@ -63,5 +67,16 @@ class SessionUsersRepositoryTest {
 
         SessionStudents studentsBySessionId = sessionUsersRepository.findBySessionId(10000L);
         assertThat(studentsBySessionId.size()).isEqualTo(2);
+    }
+    
+    @DisplayName("특정 수강생의 상태를 선발상태로 변경한다")
+    @Test
+    void updateBySelected(){
+        Long id = sessionUsersRepository.save(new SessionStudent(10000L, 1L, true));
+
+        sessionUsersRepository.updateBySelected(id, true);
+
+        SessionStudent student = sessionUsersRepository.findById(id);
+        assertThat(student.isSelected()).isTrue();
     }
 }
