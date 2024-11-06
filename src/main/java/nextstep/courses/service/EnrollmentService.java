@@ -1,15 +1,17 @@
 package nextstep.courses.service;
 
-import nextstep.courses.domain.*;
+import nextstep.courses.domain.Session;
+import nextstep.courses.domain.SessionRepository;
+import nextstep.courses.domain.SessionStudent;
+import nextstep.courses.domain.SessionUsersRepository;
 import nextstep.users.domain.NsUser;
 import nextstep.users.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
+@Transactional
 public class EnrollmentService {
 
     private final SessionRepository sessionRepository;
@@ -25,7 +27,6 @@ public class EnrollmentService {
         this.userRepository = userRepository;
     }
 
-    @Transactional
     public void enrollSession(EnrollRequest request) {
         Session session = request.getSession();
         NsUser loginUser = request.getLoginUser();
@@ -43,4 +44,15 @@ public class EnrollmentService {
         SessionStudent student = new SessionStudent(session.getId(), loginUser.getId());
         sessionUsersRepository.save(student);
     }
+
+    public void filterToSelected(Session session) {
+        sessionRepository.findById(session.getId()).orElseThrow(
+                () -> new RuntimeException("존재하지 않는 강의입니다.")
+        );
+
+        session.filterSelectedStudents();
+        sessionUsersRepository.deleteBySessionId(session.getId());
+        sessionUsersRepository.bulkSave(session.getStudents().getStudents());
+    }
+
 }
